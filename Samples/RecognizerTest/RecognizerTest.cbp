@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="RecognizerTest" />
+		<Option platforms="Unix;" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release Unix">
+				<Option platforms="Unix;" />
+				<Option output="../../bin/RecognizerTest" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-O3" />
+				</Compiler>
+			</Target>
+			<Target title="Debug Unix">
+				<Option platforms="Unix;" />
+				<Option output="../../bin/RecognizerTest" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../bin" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add directory="../../include" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,-rpath-link,../../bin" />
+			<Add library="Fubi" />
+			<Add library="glut" />
+			<Add library="GL" />
+			<Add library="GLU" />
+			<Add directory="../../bin" />
+		</Linker>		
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

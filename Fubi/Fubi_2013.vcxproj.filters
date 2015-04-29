@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GestureRecognizer">
+      <UniqueIdentifier>{cab3ba60-6cfc-4d75-80fb-d2b443b90df5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GestureRecognizer\RightHandUpRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\ArmsCrossedRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\ArmsNearPocketsRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\LeftHandUpRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\ArmsDownTogetherRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\LeftHandOutRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightHandOutRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\LeftKneeUpRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightKneeUpRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\HandsFrontTogetherRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\LeftHandOverHeadRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightHandOverHeadRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightHandLeftOfShoulderRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightHandRightOfShoulderRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\JointRelationRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\LinearMovementRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightHandPointingRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Fubi.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiUser.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiImageProcessing.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiRecognizerFactory.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiCore.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\JointOrientationRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\RightHandCloseToArmRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\LeftHandCloseToArmRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\FingerCountRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiOpenNISensor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\CombinationRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiOpenNI2Sensor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiKinectSDKSensor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiUtils.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiXMLParser.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\AngularMovementRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiLeapSensor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiHand.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiKinectSDK2Sensor.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiRecorder.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiPlayer.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\TemplateRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+    <ClCompile Include="FubiGMR.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GestureRecognizer\HMMRecognizer.cpp">
+      <Filter>GestureRecognizer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GestureRecognizer\RightHandUpRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\ArmsCrossedRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\ArmsNearPocketsRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\LeftHandUpRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\ArmsDownTogetherRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\LeftHandOutRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightHandOutRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\LeftKneeUpRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightKneeUpRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\HandsFrontTogetherRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\LeftHandOverHeadRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightHandOverHeadRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightHandLeftOfShoulderRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightHandRightOfShoulderRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\JointRelationRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\LinearMovementRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightHandPointingRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Fubi.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiUser.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiUtils.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\IGestureRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiImageProcessing.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiRecognizerFactory.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiCore.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\JointOrientationRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\RightHandCloseToArmRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\LeftHandCloseToArmRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\FingerCountRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiOpenNISensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiISensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\CombinationRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiPredefinedGestures.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiConfig.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiOpenNI2Sensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiKinectSDKSensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiXMLParser.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\AngularMovementRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiIFingerSensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiLeapSensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiHand.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiMath.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiKinectSDK2Sensor.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiRecorder.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidxml_print.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiPlayer.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\TemplateRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiGMR.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="FubiGMRUtils.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GestureRecognizer\HMMRecognizer.h">
+      <Filter>GestureRecognizer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

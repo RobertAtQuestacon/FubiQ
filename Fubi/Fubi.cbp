@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Fubi" />
+		<Option platforms="Unix;" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release Unix">
+				<Option platforms="Unix;" />
+				<Option output="../bin/Fubi" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O3" />
+				</Compiler>
+			</Target>
+			<Target title="Debug Unix">
+				<Option platforms="Unix;" />
+				<Option output="../bin/Fubi" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-fPIC" />
+			<Add directory="/usr/include/ni" />
+			<Add directory="$OPENNI2_INCLUDE" />
+			<Add directory="$NITE2_INCLUDE" />
+			<Add directory="$OPEN_NI_INCLUDE" />
+		</Compiler>
+		<Linker>
+			<Add library="opencv_core" />
+			<Add library="opencv_highgui" />
+			<Add library="opencv_imgproc" />
+			<Add library="OpenNI" />
+			<Add library="OpenNI2" />
+			<Add library="NiTE2" />
+			<Add directory="../bin" />
+		</Linker>
+		<ExtraCommands>
+			<Add before='if [ &quot;${OPENNI2_REDIST}&quot; != &quot;&quot; ]; then cp -p -r -u ${OPENNI2_REDIST}/* ../bin/; fi' />
+			<Add before='if [ &quot;${NITE2_REDIST}&quot;  != &quot;&quot; ]; then cp -p -r -u ${NITE2_REDIST}/* ../bin/; fi' />
+			<Add before='if [ &quot;${NITE2_REDIST}&quot; != &quot;&quot; ]; then cp -p -r -u ${NITE2_REDIST}/NiTE2 ../; fi' />
+			<Add after="cp -p -u Fubi.h ../include/" />
+			<Add after="cp -p -u FubiUser.h ../include/" />
+			<Add after="cp -p -u FubiHand.h ../include/" />
+			<Add after="cp -p -u FubiPredefinedGestures.h ../include/" />
+			<Add after="cp -p -u FubiUtils.h ../include/" />
+			<Add after="cp -p -u FubiMath.h ../include/" />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Unit filename="Fubi.cpp" />
+		<Unit filename="Fubi.h" />
+		<Unit filename="FubiConfig.h" />
+		<Unit filename="FubiCore.cpp" />
+		<Unit filename="FubiCore.h" />
+		<Unit filename="FubiGMR.cpp" />
+		<Unit filename="FubiGMR.h" />
+		<Unit filename="FubiGMRUtils.h" />
+		<Unit filename="FubiHand.cpp" />
+		<Unit filename="FubiHand.h" />
+		<Unit filename="FubiIFingerSensor.h" />
+		<Unit filename="FubiISensor.h" />
+		<Unit filename="FubiImageProcessing.cpp" />
+		<Unit filename="FubiImageProcessing.h" />
+		<Unit filename="FubiKinectSDKSensor.cpp" />
+		<Unit filename="FubiKinectSDKSensor.h" />
+		<Unit filename="FubiLeapSensor.cpp" />
+		<Unit filename="FubiLeapSensor.h" />
+		<Unit filename="FubiMath.h" />
+		<Unit filename="FubiOpenNI2Sensor.cpp" />
+		<Unit filename="FubiOpenNI2Sensor.h" />
+		<Unit filename="FubiOpenNISensor.cpp" />
+		<Unit filename="FubiOpenNISensor.h" />
+		<Unit filename="FubiPlayer.cpp" />
+		<Unit filename="FubiPlayer.h" />
+		<Unit filename="FubiPredefinedGestures.h" />
+		<Unit filename="FubiRecognizerFactory.cpp" />
+		<Unit filename="FubiRecognizerFactory.h" />
+		<Unit filename="FubiRecorder.cpp" />
+		<Unit filename="FubiRecorder.h" />
+		<Unit filename="FubiUser.cpp" />
+		<Unit filename="FubiUser.h" />
+		<Unit filename="FubiUtils.cpp" />
+		<Unit filename="FubiUtils.h" />
+		<Unit filename="FubiXMLParser.cpp" />
+		<Unit filename="FubiXMLParser.h" />
+		<Unit filename="GestureRecognizer/AngularMovementRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/AngularMovementRecognizer.h" />
+		<Unit filename="GestureRecognizer/ArmsCrossedRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/ArmsCrossedRecognizer.h" />
+		<Unit filename="GestureRecognizer/ArmsDownTogetherRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/ArmsDownTogetherRecognizer.h" />
+		<Unit filename="GestureRecognizer/ArmsNearPocketsRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/ArmsNearPocketsRecognizer.h" />
+		<Unit filename="GestureRecognizer/CombinationRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/CombinationRecognizer.h" />
+		<Unit filename="GestureRecognizer/FingerCountRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/FingerCountRecognizer.h" />
+		<Unit filename="GestureRecognizer/HMMRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/HMMRecognizer.h" />
+		<Unit filename="GestureRecognizer/HandsFrontTogetherRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/HandsFrontTogetherRecognizer.h" />
+		<Unit filename="GestureRecognizer/IGestureRecognizer.h" />
+		<Unit filename="GestureRecognizer/JointOrientationRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/JointOrientationRecognizer.h" />
+		<Unit filename="GestureRecognizer/JointRelationRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/JointRelationRecognizer.h" />
+		<Unit filename="GestureRecognizer/LeftHandCloseToArmRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/LeftHandCloseToArmRecognizer.h" />
+		<Unit filename="GestureRecognizer/LeftHandOutRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/LeftHandOutRecognizer.h" />
+		<Unit filename="GestureRecognizer/LeftHandOverHeadRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/LeftHandOverHeadRecognizer.h" />
+		<Unit filename="GestureRecognizer/LeftHandUpRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/LeftHandUpRecognizer.h" />
+		<Unit filename="GestureRecognizer/LeftKneeUpRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/LeftKneeUpRecognizer.h" />
+		<Unit filename="GestureRecognizer/LinearMovementRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/LinearMovementRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandCloseToArmRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandCloseToArmRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandLeftOfShoulderRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandLeftOfShoulderRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandOutRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandOutRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandOverHeadRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandOverHeadRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandPointingRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandPointingRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandRightOfShoulderRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandRightOfShoulderRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightHandUpRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightHandUpRecognizer.h" />
+		<Unit filename="GestureRecognizer/RightKneeUpRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/RightKneeUpRecognizer.h" />
+		<Unit filename="GestureRecognizer/TemplateRecognizer.cpp" />
+		<Unit filename="GestureRecognizer/TemplateRecognizer.h" />
+		<Unit filename="rapidxml.hpp" />
+		<Unit filename="rapidxml_print.hpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

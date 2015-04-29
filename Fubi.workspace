@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Fubi">
+		<Project filename="Samples/RecognizerTest/RecognizerTest.cbp">
+			<Depends filename="Fubi/Fubi.cbp" />
+		</Project>
+		<Project filename="Fubi/Fubi.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

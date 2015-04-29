@@ -1,0 +1,6 @@
+<map id="Fubi::TrackingData" name="Fubi::TrackingData">
+<area shape="rect" id="node2" href="$a00035.html" title="SkeletonJointPosition contains the position (Vec3f) and tracking confidence for a skeleton joint..." alt="" coords="5,373,185,494"/>
+<area shape="rect" id="node3" href="$a00042.html" title="Vector class with three components. " alt="" coords="42,27,149,281"/>
+<area shape="rect" id="node4" href="$a00034.html" title="SkeletonJointOrientation contains the orientation (Matrix3f) and tracking confidence for a skeleton j..." alt="" coords="209,365,405,501"/>
+<area shape="rect" id="node5" href="$a00020.html" title="Matrix class with 3x3 layout (rotation matrices) " alt="" coords="255,5,360,303"/>
+</map>

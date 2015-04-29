@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Fubi</ProjectName>
+    <ProjectGuid>{7639237C-5275-436F-90EE-AA71D709CA3B}</ProjectGuid>
+    <RootNamespace>Fubi</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(KINECTSDK20_DIR)inc;$(OPENNI2_INCLUDE);$(NITE2_INCLUDE);$(OPEN_NI_INCLUDE);$(KINECTSDK10_DIR)inc;$(FTSDK_DIR)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;$(CommandLinePreProcessors);_DEBUG;_WINDOWS;_USRDLL;FUBI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)bin\$(ProjectName)d.dll</OutputFile>
+      <AdditionalLibraryDirectories>$(KINECTSDK20_DIR)lib\x86;$(FTSDK_DIR)Lib\$(PlatformShortName);$(OPENNI2_LIB);$(NITE2_LIB);$(OPEN_NI_LIB);$(KINECTSDK10_DIR)Lib\$(PlatformShortName);$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(SolutionDir)lib\$(TargetName).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Fubi.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiUser.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiHand.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiPredefinedGestures.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiUtils.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiMath.h" "$(SolutionDir)include\" /y
+if NOT "$(OPENNI2_REDIST)" == "" (xcopy "$(OPENNI2_REDIST)*.*" "$(OutDir)" /eiy)
+if NOT "$(NITE2_REDIST)" == "" (xcopy "$(NITE2_REDIST)*.*" "$(OutDir)" /eiy)
+if NOT "$(FTSDK_DIR)" == "" (xcopy "$(FTSDK_DIR)Redist\$(PlatformShortName)\FaceTrackLib.dll" "$(OutDir)" /eiy)
+if NOT "$(FTSDK_DIR)" == "" (xcopy "$(FTSDK_DIR)Redist\$(PlatformShortName)\FaceTrackData.dll" "$(OutDir)" /eiy)
+if NOT "$(KINECTSDK20_DIR)" == "" (xcopy "$(KINECTSDK20_DIR)Redist\Face\$(PlatformShortName)\Kinect20.Face.dll" "$(OutDir)" /eiy)
+if NOT "$(KINECTSDK20_DIR)" == "" (xcopy "$(KINECTSDK20_DIR)Redist\Face\$(PlatformShortName)\NuiDatabase" "$(OutDir)\NuiDatabase" /eiy)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(KINECTSDK20_DIR)inc;$(OPENNI2_INCLUDE);$(NITE2_INCLUDE);$(OPEN_NI_INCLUDE);$(KINECTSDK10_DIR)inc;$(FTSDK_DIR)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;$(CommandLinePreProcessors);NDEBUG;_WINDOWS;_USRDLL;FUBI_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(SolutionDir)bin\$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>$(KINECTSDK20_DIR)lib\x86;$(FTSDK_DIR)Lib\$(PlatformShortName);$(OPENNI2_LIB);$(NITE2_LIB);$(OPEN_NI_LIB);$(KINECTSDK10_DIR)Lib\$(PlatformShortName);$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>$(SolutionDir)lib\$(TargetName).lib</ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Fubi.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiUser.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiHand.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiPredefinedGestures.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiUtils.h" "$(SolutionDir)include\" /y
+xcopy "$(ProjectDir)FubiMath.h" "$(SolutionDir)include\" /y
+if NOT "$(OPENNI2_REDIST)" == "" (xcopy "$(OPENNI2_REDIST)*.*" "$(OutDir)" /eiy)
+if NOT "$(NITE2_REDIST)" == "" (xcopy "$(NITE2_REDIST)*.*" "$(OutDir)" /eiy)
+if NOT "$(FTSDK_DIR)" == "" (xcopy "$(FTSDK_DIR)Redist\$(PlatformShortName)\FaceTrackLib.dll" "$(OutDir)" /eiy)
+if NOT "$(FTSDK_DIR)" == "" (xcopy "$(FTSDK_DIR)Redist\$(PlatformShortName)\FaceTrackData.dll" "$(OutDir)" /eiy)
+if NOT "$(KINECTSDK20_DIR)" == "" (xcopy "$(KINECTSDK20_DIR)Redist\Face\$(PlatformShortName)\Kinect20.Face.dll" "$(OutDir)" /eiy)
+if NOT "$(KINECTSDK20_DIR)" == "" (xcopy "$(KINECTSDK20_DIR)Redist\Face\$(PlatformShortName)\NuiDatabase" "$(OutDir)\NuiDatabase" /eiy)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Fubi.cpp" />
+    <ClCompile Include="FubiCore.cpp" />
+    <ClCompile Include="FubiGMR.cpp" />
+    <ClCompile Include="FubiHand.cpp" />
+    <ClCompile Include="FubiImageProcessing.cpp" />
+    <ClCompile Include="FubiKinectSDK2Sensor.cpp" />
+    <ClCompile Include="FubiKinectSDKSensor.cpp" />
+    <ClCompile Include="FubiLeapSensor.cpp" />
+    <ClCompile Include="FubiOpenNI2Sensor.cpp" />
+    <ClCompile Include="FubiOpenNISensor.cpp" />
+    <ClCompile Include="FubiPlayer.cpp" />
+    <ClCompile Include="FubiRecognizerFactory.cpp" />
+    <ClCompile Include="FubiRecorder.cpp" />
+    <ClCompile Include="FubiUser.cpp" />
+    <ClCompile Include="FubiUtils.cpp" />
+    <ClCompile Include="FubiXMLParser.cpp" />
+    <ClCompile Include="GestureRecognizer\AngularMovementRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\ArmsCrossedRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\ArmsDownTogetherRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\ArmsNearPocketsRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\CombinationRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\FingerCountRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\HandsFrontTogetherRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\HMMRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\JointOrientationRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\JointRelationRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\LeftHandCloseToArmRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\LeftHandOutRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\LeftHandOverHeadRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\LeftHandUpRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\LeftKneeUpRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\LinearMovementRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandCloseToArmRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandLeftOfShoulderRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandOutRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandOverHeadRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandPointingRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandRightOfShoulderRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightHandUpRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\RightKneeUpRecognizer.cpp" />
+    <ClCompile Include="GestureRecognizer\TemplateRecognizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Fubi.h" />
+    <ClInclude Include="FubiConfig.h" />
+    <ClInclude Include="FubiCore.h" />
+    <ClInclude Include="FubiGMR.h" />
+    <ClInclude Include="FubiGMRUtils.h" />
+    <ClInclude Include="FubiHand.h" />
+    <ClInclude Include="FubiIFingerSensor.h" />
+    <ClInclude Include="FubiImageProcessing.h" />
+    <ClInclude Include="FubiISensor.h" />
+    <ClInclude Include="FubiKinectSDK2Sensor.h" />
+    <ClInclude Include="FubiKinectSDKSensor.h" />
+    <ClInclude Include="FubiLeapSensor.h" />
+    <ClInclude Include="FubiMath.h" />
+    <ClInclude Include="FubiOpenNI2Sensor.h" />
+    <ClInclude Include="FubiOpenNISensor.h" />
+    <ClInclude Include="FubiPlayer.h" />
+    <ClInclude Include="FubiPredefinedGestures.h" />
+    <ClInclude Include="FubiRecognizerFactory.h" />
+    <ClInclude Include="FubiRecorder.h" />
+    <ClInclude Include="FubiUser.h" />
+    <ClInclude Include="FubiUtils.h" />
+    <ClInclude Include="FubiXMLParser.h" />
+    <ClInclude Include="GestureRecognizer\AngularMovementRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\ArmsCrossedRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\ArmsDownTogetherRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\ArmsNearPocketsRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\CombinationRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\FingerCountRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\HandsFrontTogetherRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\HMMRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\IGestureRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\JointOrientationRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\JointRelationRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\LeftHandCloseToArmRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\LinearMovementRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\LeftHandOutRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\LeftHandOverHeadRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\LeftHandUpRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\LeftKneeUpRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandCloseToArmRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandLeftOfShoulderRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandOutRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandOverHeadRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandPointingRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandRightOfShoulderRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightHandUpRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\RightKneeUpRecognizer.h" />
+    <ClInclude Include="GestureRecognizer\TemplateRecognizer.h" />
+    <ClInclude Include="rapidxml.hpp" />
+    <ClInclude Include="rapidxml_print.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

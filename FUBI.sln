@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RecognizerTest", "Samples\RecognizerTest\RecognizerTest.vcxproj", "{810D79C8-2515-49F8-A654-37B2DBA9F1A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{791CC081-A6A6-4CA0-B326-86668EDE3819}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fubi", "Fubi\Fubi.vcxproj", "{7639237C-5275-436F-90EE-AA71D709CA3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fubi_WPF_GUI", "Samples\Fubi_WPF_GUI\Fubi_WPF_GUI.csproj", "{B3EB3B12-8753-4F84-A45F-4D6B4681C3F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7639237C-5275-436F-90EE-AA71D709CA3B} = {7639237C-5275-436F-90EE-AA71D709CA3B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fubi_CS_Wrapper", "FubiNET\FubiNET.csproj", "{E681F26D-1EAB-41C1-BCF9-10F199DD1805}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7639237C-5275-436F-90EE-AA71D709CA3B} = {7639237C-5275-436F-90EE-AA71D709CA3B}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{810D79C8-2515-49F8-A654-37B2DBA9F1A0}.Debug|x86.ActiveCfg = Debug|Win32
+		{810D79C8-2515-49F8-A654-37B2DBA9F1A0}.Debug|x86.Build.0 = Debug|Win32
+		{810D79C8-2515-49F8-A654-37B2DBA9F1A0}.Release|x86.ActiveCfg = Release|Win32
+		{810D79C8-2515-49F8-A654-37B2DBA9F1A0}.Release|x86.Build.0 = Release|Win32
+		{7639237C-5275-436F-90EE-AA71D709CA3B}.Debug|x86.ActiveCfg = Debug|Win32
+		{7639237C-5275-436F-90EE-AA71D709CA3B}.Debug|x86.Build.0 = Debug|Win32
+		{7639237C-5275-436F-90EE-AA71D709CA3B}.Release|x86.ActiveCfg = Release|Win32
+		{7639237C-5275-436F-90EE-AA71D709CA3B}.Release|x86.Build.0 = Release|Win32
+		{B3EB3B12-8753-4F84-A45F-4D6B4681C3F5}.Debug|x86.ActiveCfg = Debug|x86
+		{B3EB3B12-8753-4F84-A45F-4D6B4681C3F5}.Debug|x86.Build.0 = Debug|x86
+		{B3EB3B12-8753-4F84-A45F-4D6B4681C3F5}.Release|x86.ActiveCfg = Release|x86
+		{B3EB3B12-8753-4F84-A45F-4D6B4681C3F5}.Release|x86.Build.0 = Release|x86
+		{E681F26D-1EAB-41C1-BCF9-10F199DD1805}.Debug|x86.ActiveCfg = Debug|x86
+		{E681F26D-1EAB-41C1-BCF9-10F199DD1805}.Debug|x86.Build.0 = Debug|x86
+		{E681F26D-1EAB-41C1-BCF9-10F199DD1805}.Release|x86.ActiveCfg = Release|x86
+		{E681F26D-1EAB-41C1-BCF9-10F199DD1805}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{810D79C8-2515-49F8-A654-37B2DBA9F1A0} = {791CC081-A6A6-4CA0-B326-86668EDE3819}
+		{B3EB3B12-8753-4F84-A45F-4D6B4681C3F5} = {791CC081-A6A6-4CA0-B326-86668EDE3819}
+	EndGlobalSection
+EndGlobal

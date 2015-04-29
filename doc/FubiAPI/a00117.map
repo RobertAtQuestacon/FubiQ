@@ -1,0 +1,4 @@
+<map id="Fubi::TrackingData" name="Fubi::TrackingData">
+<area shape="rect" id="node2" href="$a00012.html" title="Finger Tracking data with global and local positions/orientations, the current finger count and a tim..." alt="" coords="5,263,172,369"/>
+<area shape="rect" id="node3" href="$a00041.html" title="User Tracking data with global and local positions/orientations and a timestamp. " alt="" coords="196,263,355,369"/>
+</map>

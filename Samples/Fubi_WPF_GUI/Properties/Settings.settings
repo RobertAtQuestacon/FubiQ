@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Fubi_WPF_GUI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LastRecognizerXMLPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SampleRecognizers.xml</Value>
+    </Setting>
+    <Setting Name="LastBindingXMLPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">KeyMouseBindings.xml</Value>
+    </Setting>
+    <Setting Name="LastGenerateXMLPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">untitled.xml</Value>
+    </Setting>
+    <Setting Name="ControlValues" Type="Fubi_WPF_GUI.SerializableStringDictionary" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastRecordingFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">trainingData/tempRecord.xml</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
