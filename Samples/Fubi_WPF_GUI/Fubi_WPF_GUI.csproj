@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Avi.cs" />
     <Compile Include="FubiMouseKeyboard.cs" />
     <Compile Include="FubiXMLGenerator\AngularMovementXMLGenerator.cs" />
     <Compile Include="FubiXMLGenerator\CombinationXMLGenerator.cs" />
