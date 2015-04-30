@@ -22,6 +22,8 @@ using Microsoft.Win32;
 using Fubi_WPF_GUI.FubiXMLGenerator;
 using System.Windows.Data;
 
+using Video;
+
 namespace Fubi_WPF_GUI
 {
     public class PercentConverter : IValueConverter
@@ -114,7 +116,7 @@ namespace Fubi_WPF_GUI
         private CancellationTokenSource m_cancelXmlGenToken = null;
 
         //#ifdef ADD_RP_2015
-        private AviClass aviFile = new AviClass();
+        private VideoClass aviFile = new VideoClass();
         private int lastNumUsers = 0;
         private string recordSkeletonFileName;
         private Thread backgroundThread;

@@ -73,7 +73,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Avi.cs" />
     <Compile Include="FubiMouseKeyboard.cs" />
     <Compile Include="FubiXMLGenerator\AngularMovementXMLGenerator.cs" />
     <Compile Include="FubiXMLGenerator\CombinationXMLGenerator.cs" />
@@ -208,6 +207,10 @@
     <ProjectReference Include="..\..\FubiNET\FubiNET.csproj">
       <Project>{E681F26D-1EAB-41C1-BCF9-10F199DD1805}</Project>
       <Name>Fubi_CS_Wrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Video\Video.csproj">
+      <Project>{BFA0C058-00BB-482D-B0DD-9F6915630417}</Project>
+      <Name>Video</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

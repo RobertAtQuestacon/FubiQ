@@ -1,18 +1,14 @@
 ﻿using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Runtime.InteropServices;
-//using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.IO;
-//using System.Xml.Serialization;
-//using System.Collections.Specialized;
-using System.Windows;
 
-namespace Fubi_WPF_GUI
+namespace Video
 {
-    public class AviClass
+    public class VideoClass
     {
-        public string fileName = "test.avi";
+        public string fileName = "test.vid";
         public bool playMode = false;
         public bool saveMode = false;
         public bool pause = false;
@@ -59,7 +55,7 @@ namespace Fubi_WPF_GUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception " + ex.ToString() + " while opening " + fileName, "ERROR");
+                Console.WriteLine("Exception " + ex.ToString() + " while opening " + fileName);
                 aviReader = null;
             }
             pause = false;
