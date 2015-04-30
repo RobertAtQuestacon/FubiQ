@@ -1,0 +1,80 @@
+Installed distribution Xtion Pro CD and could run sample applications under PrimeSense but cannot figure how to compile examples either here or under OpenCV yet.
+
+Installed Fubi from https://www.informatik.uni-augsburg.de/lehrstuehle/hcm/projects/tools/fubi/
+
+Copied whole directory to E:\Documents\visual studio 2010\projects\Xtion
+and after opening FUBI.sln, edited FubiConfig.h to comment out #define FUBI_USE_OPENCV
+and then the application would compile but not tracking data.
+
+During installation it did say that some things were missing.
+So I did download a different version of OpenNi (SimpleOpenNI-1.96) which may be a precurser to version 2.
+
+Shall try to install openCV now V2.4.10 from http://opencv.org/downloads.html  = 358MB download
+and saved it in e:/documents/xtion
+When unpacked, I relocated it to e:/libaries.  (couldn't use "program files" as the space in a name seemed to cause difficulties.
+The readme.md recommanded the tutorials:
+http://docs.opencv.org/doc/tutorials/tutorials.html
+which point to ->
+http://docs.opencv.org/doc/tutorials/introduction/windows_install/windows_install.html#windows-installation
+which point to ->
+http://docs.opencv.org/doc/tutorials/introduction/windows_install/windows_install.html#windowssetpathandenviromentvariable
+
+so from command prompt as administrator I have set:
+
+setx -m OPENCV_DIR "E:\Libraries\opencv\build\x86\vc10"
+
+which responded:
+
+SUCCESS: Specified value was saved.
+
+setx PATH "PATH;%OPENCV_DIR%\bin"
+
+Same response. Now appears in the path variable.
+
+I tried adding the include $(OPENCV_DIR)\..\..\include to "Additional Include Directories" but that didn't seem to work, so I added to the VC++ directories and that seemed to work but evidently it is a global solution for all vc projects.
+
+Now certain dll s are missing.  All attempts to add the path to the dll's in failed.
+
+Even http://www.informatik.uni-augsburg.de/de/lehrstuehle/hcm/projects/tools/fubi/doc/install.html  has no firm advice.
+
+I notice that a lot of the 2011 dlls are in the projects directory, so, in desperation, I have copied the dll file across and now it works.  Both examples now compile and run with skeleton tracking.
+
+Moving on to fubi doc tutorial1, the init() functon is in Fubi.cs and is called in the startNextSensor() function of the main.cs file for the Recognizer test.
+
+
+When moving the sensor, this error occured:
+An exception of type 'System.InvalidOperationException' occurred in System.Core.dll but was not handled in user code
+
+Additional information: Sequence contains no elements
+
+at line #217 or RecognizerStatsWindow.xaml.cs =
+                    color = colorLookup[col.ToArgb()].First().Name;
+for color = FF007FFF
+
+
+For our Peacock spider dance application we need to record and playback a sillotte of a human dancing.
+
+Fubi.getImage() (in MainWindow.xaml.cs seems to grab data to s_buffer which could be recorded - possibly with some compression for non-movement as detected by the skeleton tracking.
+
+wb.WritePixels() is the point at which it can be injected back into the display.
+
+Have added simple record to file and playbackbut intend to turn temporary file into compressed avi file.
+
+test.xml dated 13/01/2015 has something that can cause a fatal error in the code - rarely the same error each time.
+
+
+Installed git (firstly from GitHub but this gave no gui I could understand, then downloaded the dev version of msysgit by mistake
+ - use the download fro the top of http://msysgit.github.io/ .  Create repository FubiQ, also at Github at RobertAtQuestacon.
+ git config --global user.name "Robert Parker"
+ git config --global user.email "robert.parker@questacon.edu.au"
+ Used git add -A tp add all to repo and git commit -m "intial commit"
+ git remote add origin https://github.com/RobertAtQuestacon
+ git push -u origin master
+ 
+ Add VisualStudio.gitignore from github repository before the push.
+
+Trying RecognnizerTest, needed to disable incremental linking using solution in  http://stackoverflow.com/questions/12267158/failure-during-conversion-to-coff-file-invalid-or-corrupt
+
+Complains that I have forgotten to enable FUBI_OPEN_NI2 in config but when I do it cannot find Nite.h
+
+https://www.informatik.uni-augsburg.de/lehrstuehle/hcm/projects/tools/fubi/doc/tutorial2.html has a speeling error for "BasicDirecton", "peace".  1,2,3 recognizers work fine.

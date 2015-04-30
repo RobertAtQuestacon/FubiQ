@@ -1900,7 +1900,7 @@ namespace Fubi_WPF_GUI
                 //if (recordImageCheckBox.IsChecked == true)  // need to save it even if we dont use it
                 //{
                 aviFile.fileName = dlg.FileName.Substring(0, dlg.FileName.Length - 3) + "avi";
-                if (!File.Exists(aviFile.fileName))
+                if (!File.Exists(aviFile.fileName) && (recordImageCheckBox.IsChecked == true))
                 {
                     showWarnMsg("Video file " + aviFile.fileName + " does not exist.", "OPERATION ABORTED");
                     return;

@@ -476,8 +476,10 @@ int main(int argc, char ** argv)
     setAutoStartCombinationRecognition(true);
     // Loading the sample recognizer definitions
     //loadRecognizersFromXML("SampleTemplateRecognizers.xml");
-    loadRecognizersFromXML("SampleRecognizers.xml");
-    loadRecognizersFromXML("SampleFingerRecognizers.xml");
+	loadRecognizersFromXML("TutorialRecognizers.xml");
+    //loadRecognizersFromXML("SampleRecognizers.xml");
+    //loadRecognizersFromXML("SampleFingerRecognizers.xml");
+
 
     // Set callbacks for start and end of a recognition
     setRecognitionCallbacks(&recognitionStartCallback, &recognitionEndCallback);
