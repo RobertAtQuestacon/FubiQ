@@ -249,6 +249,8 @@ namespace AnimalDanceOff
                 //}
 
                 var stride2 = windowBuffer2.PixelWidth * (windowBuffer2.Format.BitsPerPixel / 8);
+                //int c = BitConverter.ToInt32(s_buffer2, (stride2 * windowBuffer2.PixelHeight+ stride2)/2);  //sample center
+                //Console.WriteLine(c.ToString("x"));  // seems to be ARGB format as printed (ie byte reverse)
                 windowBuffer2.WritePixels(new Int32Rect(0, 0, windowBuffer2.PixelWidth, windowBuffer2.PixelHeight), s_buffer2, stride2, 0);
             }
 
@@ -256,7 +258,7 @@ namespace AnimalDanceOff
 
         private void recognitionStart(string gestureName, uint targetID, bool isHand, FubiUtils.RecognizerType recognizerType)
         {
-            Console.WriteLine("-->" + "User " + targetID + ": END OF " + gestureName + "\n");
+            Console.WriteLine(recognizerType.ToString() + "-->" + "User " + targetID + ": START OF " + gestureName + "\n");
             //    switch (recognizerType)
             //    {
             //        case FubiUtils.RecognizerType.PREDEFINED_GESTURE:
