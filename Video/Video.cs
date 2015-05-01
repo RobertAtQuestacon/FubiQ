@@ -16,22 +16,23 @@ namespace Video
         private BinaryReader aviReader = null;
         private int playbackFrame = 0;
 
-        public void readFrame(byte[] buffer, int frame_nr)
+        public int readFrame(byte[] buffer, int frame_nr)
         {
             if (aviReader == null)
-                return;
+                return -1;
             if (aviReader.BaseStream.Position >= aviReader.BaseStream.Length)
             {
                 playbackFrame = 0;
                 aviReader.BaseStream.Seek(0, SeekOrigin.Begin);
             }
-            if (frame_nr >= 0 && frame_nr != playbackFrame)
+            else if (frame_nr >= 0 && frame_nr != playbackFrame)
             {
                 playbackFrame = frame_nr;
                 aviReader.BaseStream.Seek(buffer.Length * playbackFrame, SeekOrigin.Begin);
             }
             aviReader.Read(buffer, 0, buffer.Length);
             playbackFrame++;
+            return playbackFrame;
         }
 
         public void saveFrame(byte[] buffer)
@@ -86,7 +87,6 @@ namespace Video
                 ((IDisposable)aviReader).Dispose();
                 aviReader = null;
             }
-
         }
     }
 }

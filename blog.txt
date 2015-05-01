@@ -78,3 +78,6 @@ Trying RecognnizerTest, needed to disable incremental linking using solution in 
 Complains that I have forgotten to enable FUBI_OPEN_NI2 in config but when I do it cannot find Nite.h
 
 https://www.informatik.uni-augsburg.de/lehrstuehle/hcm/projects/tools/fubi/doc/tutorial2.html has a speeling error for "BasicDirecton", "peace".  1,2,3 recognizers work fine.
+
+For creation of AnimalDanceOff, I need to change the output directory to ..\bin\ in the BuildTab so that it could find the DLLs.
+ (Orignally put as ..\..\bin as it looks like the project is in the Samples subdirectory when it isn't)
