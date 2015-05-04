@@ -50,7 +50,7 @@ namespace AnimalDanceOff
         WriteableBitmap windowBuffer2;
         private static byte[] s_buffer1 = null;  //set to null to indicate it needs to be set
         private static byte[] s_buffer2;
-        private VideoClass aviFile = new VideoClass();
+        private VideoClass videoFile = new VideoClass();
         int frameNr = 0;
 
         // Threading
@@ -184,8 +184,8 @@ namespace AnimalDanceOff
             Fubi.RecognitionStart += new Fubi.RecognitionHandler(recognitionStart);
             Fubi.RecognitionEnd += new Fubi.RecognitionHandler(recognitionEnd);
             DispatcherOperation currentOp = null;
-            aviFile.fileName = "trainingData/tempRecord2.vid";
-            aviFile.startPlayback();
+            videoFile.fileName = "trainingData/tempRecord2.vid";
+            videoFile.startPlayback();
 
             while (m_running)
             {
@@ -236,9 +236,9 @@ namespace AnimalDanceOff
                 }
                 //try
                 //{
-                if (aviFile.playMode)  // && Fubi.isPlayingSkeletonData())
+                if (videoFile.playMode)  // && Fubi.isPlayingSkeletonData())
                 {
-                    frameNr = aviFile.readFrame(s_buffer1, frameNr);
+                    frameNr = videoFile.readFrame(s_buffer1, frameNr);
                     var stride1 = windowBuffer1.PixelWidth * (windowBuffer1.Format.BitsPerPixel / 8);
                     windowBuffer1.WritePixels(new Int32Rect(0, 0, windowBuffer1.PixelWidth, windowBuffer1.PixelHeight), s_buffer1, stride1, 0);
                 }

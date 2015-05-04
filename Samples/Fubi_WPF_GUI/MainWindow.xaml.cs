@@ -116,7 +116,7 @@ namespace Fubi_WPF_GUI
         private CancellationTokenSource m_cancelXmlGenToken = null;
 
         //#ifdef ADD_RP_2015
-        private VideoClass aviFile = new VideoClass();
+        private VideoClass videoFile = new VideoClass();
         private int lastNumUsers = 0;
         private string recordSkeletonFileName;
         private Thread backgroundThread;
@@ -519,7 +519,7 @@ namespace Fubi_WPF_GUI
                     // Stop button required to stop the recording session
                     stopButton.IsEnabled = true;
                     openRecordingButton.IsEnabled = pauseButton.IsEnabled = playButton.IsEnabled = trimButton.IsEnabled = recordButton.IsEnabled = false;
-                    aviFile.pause = false;
+                    videoFile.pause = false;
                     Settings.Default.LastRecordingFilePath = recordSkeletonFileName;
                     Settings.Default.Save();
                     recordingStarted = false;
@@ -650,18 +650,18 @@ namespace Fubi_WPF_GUI
                         bufferChanged = true;
                     }
 
-                    if (!bufferChanged && !aviFile.pause)
+                    if (!bufferChanged && !videoFile.pause)
                     {
                         // Buffer hasn't been resized so it should be valid
                         var stride = wb.PixelWidth * (wb.Format.BitsPerPixel / 8);
                         //#ifdef ADD_RP_2015
                         //try
                         //{
-                        if (aviFile.saveMode && Fubi.isRecordingSkeletonData())
-                            aviFile.saveFrame(s_buffer);
-                        if (aviFile.playMode && Fubi.isPlayingSkeletonData())
+                        if (videoFile.saveMode && Fubi.isRecordingSkeletonData())
+                            videoFile.saveFrame(s_buffer);
+                        if (videoFile.playMode && Fubi.isPlayingSkeletonData())
                         {
-                            aviFile.readFrame(s_buffer, playbackSlider.Value);
+                            videoFile.readFrame(s_buffer, playbackSlider.Value);
                         }
                         //}
                         //catch (Exception ex)
@@ -1738,10 +1738,10 @@ namespace Fubi_WPF_GUI
             //#ifdef ADD_RP_2015
             if (recordImageCheckBox.IsChecked == true)
             {
-                if (!aviFile.pause)
-                    aviFile.startPlayback();
+                if (!videoFile.pause)
+                    videoFile.startPlayback();
                 else
-                    aviFile.pause = false;
+                    videoFile.pause = false;
             }
             //#endif
 
@@ -1758,8 +1758,8 @@ namespace Fubi_WPF_GUI
         {
             lock (LockFubiUpdate)
             {
-                aviFile.stopSave();
-                aviFile.stopPlay();
+                videoFile.stopSave();
+                videoFile.stopPlay();
                 // Stop button either stops recording or playback
                 if (Fubi.isRecordingSkeletonData())
                 {
@@ -1826,23 +1826,27 @@ namespace Fubi_WPF_GUI
                 //#ifdef ADD_RP_2015
                 if (recordImageCheckBox.IsChecked == true)
                 {
-                    aviFile.fileName = dlg.FileName.Substring(0, dlg.FileName.Length - 3) + "avi";
+                    videoFile.fileName = dlg.FileName.Substring(0, dlg.FileName.Length - 4);
+                    if (compressVideo.IsChecked == true)
+                        videoFile.fileName += ".vic";
+                    else
+                        videoFile.fileName += ".vid";
                     //var dlg2 = new SaveFileDialog
                     //{
-                    //    FileName = Path.GetFileName(aviFileName),   //Settings.Default.LastRecordingFilePath
+                    //    FileName = Path.GetFileName(videoFileName),   //Settings.Default.LastRecordingFilePath
                     //    InitialDirectory = Path.GetDirectoryName(Path.GetFullPath(Settings.Default.LastRecordingFilePath)),
-                    //    DefaultExt = ".avi",
+                    //    DefaultExt = ".vid",
                     //    AddExtension = true,
-                    //    Filter = "AVI documents (.avi)|*.avi"
+                    //    Filter = "VID documents (.vid)|*.vid"
                     //};
                     //// Show open file dialog box 
                     //result = dlg2.ShowDialog();
                     //// Process open file dialog box results 
                     //if (result == true && dlg2.FileName != null)
                     //{
-                    //    aviFileName = dlg2.FileName;
+                    //    videoFileName = dlg2.FileName;
                     //}
-                    aviFile.startSave();
+                    videoFile.startSave();
                 }
                 //#endif
 
@@ -1894,31 +1898,37 @@ namespace Fubi_WPF_GUI
             // Show open file dialog box 
             var result = dlg.ShowDialog();
 
-
             // Process open file dialog box results 
             if (result == true && dlg.FileName != null)
             {
                 //#ifdef ADD_RP_2015
                 //if (recordImageCheckBox.IsChecked == true)  // need to save it even if we dont use it
                 //{
-                aviFile.fileName = dlg.FileName.Substring(0, dlg.FileName.Length - 3) + "avi";
-                if (!File.Exists(aviFile.fileName) && (recordImageCheckBox.IsChecked == true))
+                videoFile.fileName = dlg.FileName.Substring(0, dlg.FileName.Length - 4);
+                if (File.Exists(videoFile.fileName + ".vid"))
+                    videoFile.fileName += ".vid";
+                else if (File.Exists(videoFile.fileName + ".vic"))
+                    videoFile.fileName += ".vic";
+                else
                 {
-                    showWarnMsg("Video file " + aviFile.fileName + " does not exist.", "OPERATION ABORTED");
-                    return;
+                    if (recordImageCheckBox.IsChecked == true)
+                    {
+                        showWarnMsg("Video file (.vid or .vic) " + videoFile.fileName + " does not exist.", "OPERATION ABORTED");
+                        return;
+                    }
                 }
                 //var dlg2 = new OpenFileDialog
                 //{
                 //    FileName = Path.GetFileName(Settings.Default.LastRecordingFilePath),
                 //    InitialDirectory = Path.GetDirectoryName(Path.GetFullPath(Settings.Default.LastRecordingFilePath)),
-                //    DefaultExt = ".avi",
-                //    Filter = "AVI documents (.avi)|*.avi"
+                //    DefaultExt = ".vid",
+                //    Filter = "VID documents (.vid)|*.vid"
                 //};
                 //// Show open file dialog box 
                 //var result2 = dlg2.ShowDialog();
                 //if (result2 == true && dlg2.FileName != null)
                 //{
-                //    aviFileName = dlg2.FileName;
+                //    videoFileName = dlg2.FileName;
                 //}
                 //}
                 //endif
@@ -1968,7 +1978,7 @@ namespace Fubi_WPF_GUI
             pauseButton.IsEnabled = false;
             playButton.IsEnabled = trimButton.IsEnabled = stopButton.IsEnabled = true;
             //#ifdef ADD_RP_2015
-            aviFile.pause = true;
+            videoFile.pause = true;
             //#endif
         }
 
