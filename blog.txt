@@ -81,3 +81,14 @@ https://www.informatik.uni-augsburg.de/lehrstuehle/hcm/projects/tools/fubi/doc/t
 
 For creation of AnimalDanceOff, I need to change the output directory to ..\bin\ in the BuildTab so that it could find the DLLs.
  (Orignally put as ..\..\bin as it looks like the project is in the Samples subdirectory when it isn't)
+
+AnimalDanceOff working well with raw recorded video playing on left and live xtion feed on the right.
+Wasted a day getting gz compression working but it is too slow.
+
+System.Windows.Media.Imaging Namespace seemed like a good idea but the tffEncoder just copied the same frame over and over again.
+
+The Aforge AVIWriter class looks promising (http://www.aforgenet.com/framework/docs/html/5fedbbbe-6d28-5f69-35a2-9d7119544a2d.htm) so I have downloaded the AForge.NET Framework-2.2.5 framework to E:\Documents\aforge.
+
+Also found a Kinect Capture program in http://www.aforgenet.com/framework/samples/video.html but the sources are in C:\Program Files\AForge.NET\Framework\Samples\Video\Kinect Capture
+
+The dlls for referencing can be found in C:\Program Files\AForge.NET\Framework\Release

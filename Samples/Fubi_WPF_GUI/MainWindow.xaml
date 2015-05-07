@@ -197,6 +197,7 @@
                 <TabItem Header="Video Record" Name="videoRecordTab">
                     <Grid>
                         <CheckBox x:Name="compressVideo" Content="Compress Recording Video" HorizontalAlignment="Left" Margin="320,43,0,0" VerticalAlignment="Top"/>
+                        <CheckBox x:Name="gzCompress" Content="GZ Compression" HorizontalAlignment="Left" Margin="320,63,0,0" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
             </TabControl>

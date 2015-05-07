@@ -119,9 +119,13 @@ namespace Fubi_WPF_GUI
         private VideoClass videoFile = new VideoClass();
         private int lastNumUsers = 0;
         private string recordSkeletonFileName;
-        private Thread backgroundThread;
+        private Thread backgroundThread = null;
         private bool isHand = false;
         private bool recordingStarted = false;
+
+        //TiffBitmapEncoder tiffEncoder = null;
+        //TiffBitmapDecoder tiffDecoder = null;
+        //Stream ImageStreamSource = null;
 
         //#endif
 
@@ -488,9 +492,12 @@ namespace Fubi_WPF_GUI
 
             m_kListener.Dispose();
 
+            if(backgroundThread != null)
+              backgroundThread.Join(2000);
             m_fubiThread.Join(2000);
 
             Dispatcher.InvokeShutdown();
+                       
         }
 
         private void enableLoadingCircle()
@@ -658,10 +665,10 @@ namespace Fubi_WPF_GUI
                         //try
                         //{
                         if (videoFile.saveMode && Fubi.isRecordingSkeletonData())
-                            videoFile.saveFrame(s_buffer);
+                           videoFile.saveFrame(s_buffer);
                         if (videoFile.playMode && Fubi.isPlayingSkeletonData())
                         {
-                            videoFile.readFrame(s_buffer, playbackSlider.Value);
+                           videoFile.readFrame(s_buffer, playbackSlider.Value);
                         }
                         //}
                         //catch (Exception ex)
@@ -671,6 +678,27 @@ namespace Fubi_WPF_GUI
 
                         //#endif
                         wb.WritePixels(new Int32Rect(0, 0, wb.PixelWidth, wb.PixelHeight), s_buffer, stride, 0);
+                        //if (tiffEncoder != null && Fubi.isRecordingSkeletonData())
+                        //{
+                        //    if (tiffEncoder.Frames.Count < 200)
+                        //    { // approx 6 second of video at 30fps
+                        //        DateTime t1 = DateTime.Now;
+                        //        tiffEncoder.Frames.Add(BitmapFrame.Create(wb));
+                        //        DateTime t2 = DateTime.Now;
+                        //        Console.WriteLine("Frame:" + tiffEncoder.Frames.Count + " dt:"+(t2-t1).TotalMilliseconds.ToString());
+                        //    }
+                        //}
+                        
+                        //if (tiffDecoder != null && !tiffDecoder.IsDownloading)
+                        //{
+                        //    if (playbackSlider.Value < tiffDecoder.Frames.Count)
+                        //    {
+                        //        image1.Source = tiffDecoder.Frames[playbackSlider.Value];
+                        //        Console.WriteLine("ShowFrame:" + playbackSlider.Value);
+                        //    }
+                        //} else {
+                        //    image1.Source = wb;
+                        //}
                     }
                 }
 
@@ -1739,10 +1767,22 @@ namespace Fubi_WPF_GUI
             if (recordImageCheckBox.IsChecked == true)
             {
                 if (!videoFile.pause)
+                {
                     videoFile.startPlayback();
+                    //if (File.Exists("video.tif"))
+                    //{
+                    //    ImageStreamSource = new FileStream("video.tif", FileMode.Open, FileAccess.Read, FileShare.Read);
+                    //    tiffDecoder = new TiffBitmapDecoder(ImageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+                    //    while (tiffDecoder.IsDownloading)
+                    //    { Console.WriteLine("Frame count:" + tiffDecoder.Frames.Count);
+                    //    }
+                    //}
+                } 
                 else
                     videoFile.pause = false;
             }
+
+
             //#endif
 
 
@@ -1758,6 +1798,19 @@ namespace Fubi_WPF_GUI
         {
             lock (LockFubiUpdate)
             {
+                //if (tiffEncoder != null)
+                //{
+                //    FileStream stream = new FileStream("video.tif", FileMode.Create);
+                //    tiffEncoder.Save(stream);
+                //    stream.Close();
+                //    tiffEncoder = null;
+                //}
+                //if (tiffDecoder != null)
+                //{
+                //    tiffDecoder = null;
+                //    ImageStreamSource.Close();
+                //    ImageStreamSource = null;
+                //}
                 videoFile.stopSave();
                 videoFile.stopPlay();
                 // Stop button either stops recording or playback
@@ -1827,7 +1880,9 @@ namespace Fubi_WPF_GUI
                 if (recordImageCheckBox.IsChecked == true)
                 {
                     videoFile.fileName = dlg.FileName.Substring(0, dlg.FileName.Length - 4);
-                    if (compressVideo.IsChecked == true)
+                    if (gzCompress.IsChecked == true)
+                        videoFile.fileName += ".vgz";
+                    else if (compressVideo.IsChecked == true)
                         videoFile.fileName += ".vic";
                     else
                         videoFile.fileName += ".vid";
@@ -1847,7 +1902,9 @@ namespace Fubi_WPF_GUI
                     //    videoFileName = dlg2.FileName;
                     //}
                     videoFile.startSave();
+                    //tiffEncoder = new TiffBitmapEncoder();
                 }
+
                 //#endif
 
                 recordSkeletonFileName = dlg.FileName;
@@ -1909,6 +1966,8 @@ namespace Fubi_WPF_GUI
                     videoFile.fileName += ".vid";
                 else if (File.Exists(videoFile.fileName + ".vic"))
                     videoFile.fileName += ".vic";
+                else if (File.Exists(videoFile.fileName + ".vgz"))
+                    videoFile.fileName += ".vgz";
                 else
                 {
                     if (recordImageCheckBox.IsChecked == true)
