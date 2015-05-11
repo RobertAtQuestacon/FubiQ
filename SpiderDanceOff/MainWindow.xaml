@@ -1,0 +1,27 @@
+﻿<Window x:Class="SpiderDanceOff.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Width="1024" Height="768" Closing="Window_Closing" Loaded="Window_Loaded" WindowState="Maximized" WindowStyle="None" KeyUp="onKeyPress">
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <MediaElement Grid.Column="0" Name="maleSpiderVideo" LoadedBehavior="Manual" UnloadedBehavior="Stop" Stretch="UniformToFill" Margin="0,-100,0,-100"
+     MediaOpened="MediaElement_MediaOpened" MediaFailed="MediaElement_MediaFailed" MediaEnded="MediaElement_MediaEnded"/> 
+        </Grid>
+        <Grid Grid.Row="1" Background="black">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        <Image Name="image1" Stretch="Uniform" MinHeight="120" Margin="0" Grid.Column="0" StretchDirection="Both" MinWidth="160" Grid.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Image Name="image2" Stretch="Uniform" MinHeight="120" Margin="0" Grid.Column="1" StretchDirection="Both" MinWidth="160" Grid.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
+        </Grid>
+</Window>

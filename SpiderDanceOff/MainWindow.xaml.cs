@@ -16,14 +16,18 @@ using System.Threading;  // for Thread objects
 using System.Windows.Threading;  // for DispatchOperation
 using System.ComponentModel;   // for  cancelEventArgs
 
+using System.IO;
+
 
 using FubiNET;
 //using Microsoft.Win32;
 //using System.Windows.Data;
 
 using Video;
+using System.Windows.Forms;  //add references to System.Windows.Forms from .Net group and System.Drawing for screen control
 
-namespace AnimalDanceOff
+
+namespace SpiderDanceOff
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -60,40 +64,68 @@ namespace AnimalDanceOff
         private delegate void OneStringDelegate(string str);
         private delegate void TwoStringDelegate(string str1, string str2);
 
+        private string mediaPath = @"E:\Documents\media\spiders";
+
+        Window1 window1 = null;
+        
         public MainWindow()
         {
             InitializeComponent();
             m_running = true;
             m_fubiThread = new Thread(fubiMain);
-
         }
 
         public void showWarnMsg(string message, string caption)
         {
-            MessageBox.Show(this, message, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
+            System.Windows.MessageBox.Show(this, message, caption, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+             Screen[] screens = Screen.AllScreens; // 'doesn't necessarily put them in the right order
+        foreach(Screen s in screens) {
+            if(SystemInformation.MonitorCount == 1 || s.WorkingArea.Left > 1000) {
+                Screen screen2 = s;
+                Console.WriteLine("Screen width:" + s.WorkingArea.Width.ToString() + " height:" + s.WorkingArea.Height.ToString());
+                window1 = new Window1();
+                window1.WindowStartupLocation = WindowStartupLocation.Manual;
+                window1.Left = screen2.WorkingArea.Left;
+                window1.Top = screen2.WorkingArea.Top;
+                window1.Show();
+                window1.WindowState = WindowState.Maximized; //do this after Show() or won't draw on secondary screens
+            }
+        }
+        if(SystemInformation.MonitorCount == 1) {
+            this.WindowState = System.Windows.WindowState.Minimized;
+        } else {
+            maxWindow();
+        }
+        string fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4");
+        maleSpiderVideo.Source = new System.Uri(fid);
+        fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
+        window1.femaleSpiderVideo.Source = new System.Uri(fid);
+ 
+
+
             videoFile.edgeDelta = 10;
             videoFile.edgeThickness = 3;
             // Only start the thread after the windows has loaded
             m_fubiThread.Start(new FubiUtils.FilterOptions(1.0f, 1.0f, 0.007f));  // using filter defaults
+
+            maleSpiderVideo.Play();
+            window1.femaleSpiderVideo.Play();
         }
 
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
+            maleSpiderVideo.Stop();
             m_running = false;
 
             m_fubiThread.Join(2000);
 
             Dispatcher.InvokeShutdown();
-        }
-
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
         }
 
         private void maxWindow()
@@ -250,7 +282,7 @@ namespace AnimalDanceOff
                 //}
                 //catch (Exception ex)
                 //{
-                //    MessageBox.Show(ex.ToString());
+                //    System.Windows.MessageBox.Show(ex.ToString());
                 //}
 
                 var stride2 = windowBuffer2.PixelWidth * (windowBuffer2.Format.BitsPerPixel / 8);
@@ -290,5 +322,23 @@ namespace AnimalDanceOff
         {
 
         }
+
+        private void MediaElement_MediaOpened(System.Object sender, EventArgs e)
+        {
+        }
+
+        
+    private void MediaElement_MediaFailed(System.Object sender, EventArgs e) {
+        Console.WriteLine("Media failed: " + e.ToString());
+        //DiagnosticLabel.Content = "Media failed: " & e.ToString
+        //'MsgBox("Media failed: " & e.ToString)
+        maleSpiderVideo.Stop();
     }
+
+    private void MediaElement_MediaEnded(System.Object sender, EventArgs e) {
+        maleSpiderVideo.Stop();
+        maleSpiderVideo.Play();
+    }
+
+     }
 }

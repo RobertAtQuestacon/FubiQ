@@ -198,6 +198,11 @@
                     <Grid>
                         <CheckBox x:Name="compressVideo" Content="Compress Recording Video" HorizontalAlignment="Left" Margin="320,43,0,0" VerticalAlignment="Top"/>
                         <CheckBox x:Name="gzCompress" Content="GZ Compression" HorizontalAlignment="Left" Margin="320,63,0,0" VerticalAlignment="Top"/>
+                        <CheckBox x:Name="edgeDetect" Content="Edge Detect" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top"/>
+                        <Label Content="Edge threshold:" FontSize="12" Height="25" HorizontalAlignment="Left" Margin="10,25,0,0" Name="edgeThreshLbl" VerticalAlignment="Top" Width="95" Grid.Column="1" />
+                        <uc:NumericUpDown ClipToBounds="False" DecimalPlaces="0" DecimalSeparatorType="Point" FontSize="12" Height="22" HorizontalAlignment="Left" IsEnabled="True" Margin="110,29,0,0" Maximum="1000" MinWidth="25" Minimum="-10000" x:Name="edgeThreshControl" NegativeSignSide="Prefix" NegativeSignType="Minus" Step="1" Value="10" VerticalAlignment="Top" Width="63" Grid.Column="1" ValueChanged="edgeThresh_ValueChanged" />
+                        <Label Content="Edge thickness:" FontSize="12" Height="25" HorizontalAlignment="Left" Margin="10,52,0,0" Name="edgeThickLbl" VerticalAlignment="Top" Width="95" Grid.Column="1" />
+                        <uc:NumericUpDown ClipToBounds="False" DecimalPlaces="0" DecimalSeparatorType="Point" FontSize="12" Height="22" HorizontalAlignment="Left" IsEnabled="True" Margin="110,55,0,0" Maximum="1000" MinWidth="25" Minimum="-10000" x:Name="edgeThickControl" NegativeSignSide="Prefix" NegativeSignType="Minus" Step="1" Value="1" VerticalAlignment="Top" Width="63" Grid.Column="1" ValueChanged="edgeThick_ValueChanged" />
                     </Grid>
                 </TabItem>
             </TabControl>

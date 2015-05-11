@@ -28,8 +28,6 @@ namespace Video
         private int maxSizeMb = 0;
         public bool pause = false;
         private BinaryWriter frameWriter = null;
-        //private BufferedStream gzframeWriter = null;
-        //private MemoryStream compressIntoMs;
         private List<Int32> framePosList;
         private BinaryReader frameReader = null;
         private int playbackFrame = 0;
@@ -38,6 +36,10 @@ namespace Video
         private int frameChannels = 4;
         const int BUFFER_SIZE = 640 * 480 * 4;
         public AVIWriter aviWriter = null;
+        public bool edgeFilterEnabled = true;
+        public UInt32 blockFillColor = 0xff8080ff;  // light blue
+        public int edgeDelta = 2;
+        public int edgeThickness = 2;
 
         public VideoClass() {
           //gzCompressTest();
@@ -231,6 +233,39 @@ namespace Video
             Console.WriteLine("Length = " + out_string.Length);
         }
 
+        public byte[] edgeFilter(byte[] bufin)
+        {         
+            using (MemoryStream memStream = new MemoryStream(bufin.Length))
+            {
+                int last_depth = 1000;
+                int edgeDelay = 0;
+                for (int i = 0; i < bufin.Length; i += 4)
+                {
+                    UInt32 pix = BitConverter.ToUInt32(bufin, i);
+                    int depth; 
+                    if (bufin[i] == 0)
+                    {
+                        pix = 0;  
+                        depth = 1000;
+                    }
+                    else  {
+                        pix = blockFillColor;
+                       depth = bufin[i + 1] + bufin[i + 2] + bufin[i + 3];  // r + g +  b
+                    }
+                    int dd = Math.Abs(depth - last_depth);
+                    if (dd > edgeDelta)
+                        edgeDelay = edgeThickness;
+                    if (edgeDelay > 0)
+                    {
+                        pix = 0xff000000;
+                        edgeDelay--;
+                    }
+                    last_depth = depth;
+                    memStream.Write(BitConverter.GetBytes(pix), 0, 4);
+                }
+                return memStream.ToArray();
+            }
+        }
 
         public int readFrame(byte[] buffer, int frame_nr)
         {
@@ -268,7 +303,7 @@ namespace Video
                     if (br > 0)
                     {
                         if (fileName.EndsWith(".vgz"))
-                            Buffer.BlockCopy(gzDecompress(comp_buffer), 0, buffer, 0, buffer.Length);  // doesn't expand correctly.
+                            Buffer.BlockCopy(gzDecompress(comp_buffer), 0, buffer, 0, buffer.Length); 
                         else
                             Buffer.BlockCopy(rleDecompress(comp_buffer), 0, buffer, 0, buffer.Length);
                     }
@@ -276,23 +311,9 @@ namespace Video
                     {
                         new Random().NextBytes(buffer);  //static
                     }
-                    //using (var compressedMs = new MemoryStream(comp_buffer))
-                    //{
-                    //    using (var decompressedMs = new MemoryStream())
-                    //    {
-                    //        using (var gzs = new BufferedStream(new GZipStream(compressedMs,
-                    //         CompressionMode.Decompress), BUFFER_SIZE))
-                    //        {
-                    //            gzs.CopyTo(decompressedMs);
-                    //        }
-                    //        if (decompressedMs.Length != buffer.Length)
-                    //            return -1;  // error
-                    //        buffer = decompressedMs.ToArray();
-                    //    }
-                    //}
                 }
                 playbackFrame++;
-                Console.WriteLine("Frame:" + playbackFrame);
+                //Console.WriteLine("Frame:" + playbackFrame);
                 return playbackFrame;
             }
             catch (Exception e)
@@ -322,16 +343,6 @@ namespace Video
                 aviWriter.AddFrame(bitmap);
 
             }
-            //else if (gzframeWriter != null)
-            //{
-            //    pos = gzframeWriter.Position;
-            //    if (maxSizeKb > 0)
-            //    {
-            //        if ((pos >> 10) > maxSizeKb)
-            //            return;
-            //    }
-            //    gzframeWriter.Write(buffer, 0, buffer.Length);
-            //}
             else if (frameWriter != null)
             {
                 //pos = (Int32)frameWriter.BaseStream.Position; - didn't match the actual position due to streaming
@@ -344,6 +355,7 @@ namespace Video
                         return;
                     }
                 }
+                buffer = edgeFilter(buffer);
                 if (toCompress)
                 {
                     if (fileName.EndsWith(".vgz"))
@@ -441,12 +453,6 @@ namespace Video
                 if (toCompress)
                 {
                     framePosList = new List<Int32>();
-                    //if (fileName.EndsWith(".vgz"))
-                    //{  // uses constant objects
-                    //    compressIntoMs = new MemoryStream();
-                    //    gzframeWriter = new BufferedStream(new GZipStream(compressIntoMs,
-                    //       CompressionMode.Compress), BUFFER_SIZE);
-                    //}
                 }
                 saveMode = true;
             }
@@ -474,13 +480,6 @@ namespace Video
                 ((IDisposable)frameWriter).Dispose();
                 frameWriter = null;
             }
-            //if (gzframeWriter != null)
-            //{
-            //    gzframeWriter.Close();
-            //    ((IDisposable)gzframeWriter).Dispose();
-            //    gzframeWriter = null;
-            //    compressIntoMs.Close();
-            //}
         }
         public void stopPlay()
         {

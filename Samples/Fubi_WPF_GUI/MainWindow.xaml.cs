@@ -664,6 +664,10 @@ namespace Fubi_WPF_GUI
                         //#ifdef ADD_RP_2015
                         //try
                         //{
+                        if (edgeDetect.IsChecked == true)
+                        {
+                            s_buffer = videoFile.edgeFilter(s_buffer);
+                        }
                         if (videoFile.saveMode && Fubi.isRecordingSkeletonData())
                            videoFile.saveFrame(s_buffer);
                         if (videoFile.playMode && Fubi.isPlayingSkeletonData())
@@ -2225,6 +2229,28 @@ namespace Fubi_WPF_GUI
                             break;
                     }
                 }));
+        }
+
+        private void edgeThresh_ValueChanged(object sender, RoutedEventArgs e)
+        {
+            lock (LockFubiUpdate)
+            {
+                if (videoFile != null)
+                {
+                    videoFile.edgeDelta = (int)edgeThreshControl.Value;
+                }
+            }
+        }
+
+        private void edgeThick_ValueChanged(object sender, RoutedEventArgs e)
+        {
+            lock (LockFubiUpdate)
+            {
+                if (videoFile != null)
+                {
+                    videoFile.edgeThickness = (int)edgeThickControl.Value;
+                }
+            }
         }
     }
 }
