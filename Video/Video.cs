@@ -19,16 +19,19 @@ namespace Video
     public class VideoClass
     {
         public string fileName = "test.vid";
+        public string writeFileName;
         public bool playMode = false;
         public bool saveMode = false;
         private bool toCompress = false;
         public Int32 frameCount = 0;
+        public Int32 writeFrameCount = 0;
         public Int32 writePos = 0;
         private int maxFrames = 0;
         private int maxSizeMb = 0;
         public bool pause = false;
         private BinaryWriter frameWriter = null;
         private List<Int32> framePosList;
+        private List<Int32> writeFramePosList;
         private BinaryReader frameReader = null;
         private int playbackFrame = 0;
         private int frameWidth = 640;
@@ -40,9 +43,11 @@ namespace Video
         public UInt32 blockFillColor = 0xff8080ff;  // light blue
         public int edgeDelta = 2;
         public int edgeThickness = 2;
+        public long frameSize;  // set directly by calling class - setting only required for trim
 
-        public VideoClass() {
-          //gzCompressTest();
+        public VideoClass()
+        {
+            //gzCompressTest();
             rleCompressTest();
         }
 
@@ -100,7 +105,7 @@ namespace Video
         }
 
         public byte[] rleCompress(byte[] bufin)
-        {         
+        {
             using (MemoryStream memStream = new MemoryStream(bufin.Length))
             {
                 // first save length of the uncompressed array
@@ -121,7 +126,7 @@ namespace Video
                         while (pix_count > 1)  // 2 or more pixels were the same
                         {
                             //Console.WriteLine("Found run of " + pix_count.ToString() + " pixels of value:" + last_pix.ToString("x"));
-                            memStream.Write(BitConverter.GetBytes((Int16)Math.Min(pix_count,Int16.MaxValue)), 0, 2);
+                            memStream.Write(BitConverter.GetBytes((Int16)Math.Min(pix_count, Int16.MaxValue)), 0, 2);
                             memStream.Write(BitConverter.GetBytes(last_pix), 0, 4);
                             if (pix_count >= Int16.MaxValue)
                                 pix_count -= Int16.MaxValue;
@@ -135,9 +140,9 @@ namespace Video
                     }
                     else  // last pix is same as this one
                     {
-                        if(i == end_mixed)
-                          end_mixed = i - 4;  // last pixel is part of a run
-                        if (end_mixed > start_mixed)  
+                        if (i == end_mixed)
+                            end_mixed = i - 4;  // last pixel is part of a run
+                        if (end_mixed > start_mixed)
                         {
                             save_mixed = true;  // if a run is starting then better save the mixed bag
                         }
@@ -234,7 +239,7 @@ namespace Video
         }
 
         public byte[] edgeFilter(byte[] bufin)
-        {         
+        {
             using (MemoryStream memStream = new MemoryStream(bufin.Length))
             {
                 int last_depth = 1000;
@@ -242,15 +247,16 @@ namespace Video
                 for (int i = 0; i < bufin.Length; i += 4)
                 {
                     UInt32 pix = BitConverter.ToUInt32(bufin, i);
-                    int depth; 
+                    int depth;
                     if (bufin[i] == 0)
                     {
-                        pix = 0;  
+                        pix = 0;
                         depth = 1000;
                     }
-                    else  {
+                    else
+                    {
                         pix = blockFillColor;
-                       depth = bufin[i + 1] + bufin[i + 2] + bufin[i + 3];  // r + g +  b
+                        depth = bufin[i + 1] + bufin[i + 2] + bufin[i + 3];  // r + g +  b
                     }
                     int dd = Math.Abs(depth - last_depth);
                     if (dd > edgeDelta)
@@ -267,12 +273,13 @@ namespace Video
             }
         }
 
-        public int readFrame(byte[] buffer, int frame_nr)
+        public int readFrame(byte[] buffer, int frame_nr, bool leave_compressed = false)
         {
+            // leave_compressed mode used in trim function where frame are copied from one file to another
             if (frameReader == null)
                 return -1;
-            try
-            {
+            //try
+            //{
                 Int32 frame_start = 0;
                 if (frameReader.BaseStream.Position >= frameReader.BaseStream.Length)
                 {
@@ -288,7 +295,10 @@ namespace Video
                         frameReader.BaseStream.Seek(buffer.Length * playbackFrame, SeekOrigin.Begin);
                     else
                     {
-                        frame_start = framePosList[playbackFrame - 1];
+                        if (playbackFrame >= framePosList.Count - 1)
+                            playbackFrame = 0;  // assume auto repeat
+                        else  // framestart should already be zero
+                          frame_start = framePosList[playbackFrame - 1];
                         frameReader.BaseStream.Seek(frame_start, SeekOrigin.Begin);
                     }
                 }
@@ -298,36 +308,43 @@ namespace Video
                 {
                     int frame_length = framePosList[playbackFrame] - frame_start;
                     byte[] comp_buffer = new byte[frame_length];
-                    int br = frameReader.Read(comp_buffer, 0, frame_length);
-                    Console.WriteLine("Bytes read:" + br + " @ " + frameReader.BaseStream.Position);
-                    if (br > 0)
-                    {
-                        if (fileName.EndsWith(".vgz"))
-                            Buffer.BlockCopy(gzDecompress(comp_buffer), 0, buffer, 0, buffer.Length); 
-                        else
-                            Buffer.BlockCopy(rleDecompress(comp_buffer), 0, buffer, 0, buffer.Length);
-                    }
+                    int br;
+                    if (leave_compressed)
+                        br = frameReader.Read(buffer, 0, frame_length);
                     else
                     {
-                        new Random().NextBytes(buffer);  //static
+                        br = frameReader.Read(comp_buffer, 0, frame_length);
+                        //Console.WriteLine("Bytes read:" + br + " @ " + frameReader.BaseStream.Position);
+                        if (br > 0)
+                        {
+                            byte[] decomp;
+                            if (fileName.EndsWith(".vgz"))
+                                decomp = gzDecompress(comp_buffer);
+                            else
+                                decomp = rleDecompress(comp_buffer);
+                            Buffer.BlockCopy(decomp, 0, buffer, 0, buffer.Length);
+                        }
+                        else
+                        {
+                            new Random().NextBytes(buffer);  //static
+                        }
                     }
                 }
                 playbackFrame++;
                 //Console.WriteLine("Frame:" + playbackFrame);
                 return playbackFrame;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Frame exception: " + e.ToString());
-            }
-            return -1;
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Frame exception: " + e.ToString());
+            //}
+            // return -1;
         }
 
         public void saveFrame(byte[] buffer)
         {
-
-
-            if (maxFrames > 0 && frameCount > maxFrames)
+            // precompressed mode used in trim function where frame are copied from one file to another
+            if (maxFrames > 0 && writeFrameCount > maxFrames)
             {
                 Console.WriteLine("MaxFrames exceeded");
                 return;
@@ -372,8 +389,8 @@ namespace Video
                 }
                 frameWriter.Write(buffer);
                 writePos += buffer.Length;
-                framePosList.Add(writePos);
-                frameCount++;
+                writeFramePosList.Add(writePos);
+                writeFrameCount++;
             }
         }
 
@@ -413,18 +430,21 @@ namespace Video
             pause = false;
         }
 
-        public void startSave(int max_frames = 1000, int max_size_mb = 1000)
+        public void startSave(string fid = "", int max_frames = 1000, int max_size_mb = 1000)
         // buffer size is only required if compress is true
         {
+            writeFileName = fileName;
+            if (fid.Length > 0)
+                writeFileName = fid;
             frameCount = 0;
-            if (fileName.EndsWith(".avi"))
+            if (writeFileName.EndsWith(".avi"))
             {
                 aviWriter = new AVIWriter("MRLE");
                 aviWriter.FrameRate = 30;
                 Console.WriteLine("Codec:" + aviWriter.Codec);
-                if (File.Exists(fileName))
-                    File.Delete(fileName);  // otherwise it will not run
-                aviWriter.Open(fileName, Convert.ToInt32(640), Convert.ToInt32(480));
+                if (File.Exists(writeFileName))
+                    File.Delete(writeFileName);  // otherwise it will not run
+                aviWriter.Open(writeFileName, Convert.ToInt32(640), Convert.ToInt32(480));
                 // always crashes here anyway - something to do with Windows7 I think
                 // found some advice at http://code.google.com/p/aforge/issues/detail?id=312
 
@@ -445,14 +465,14 @@ namespace Video
             }
             else
             {
-                toCompress = !fileName.EndsWith(".vid");
+                toCompress = !writeFileName.EndsWith(".vid");
                 writePos = 0;
                 maxFrames = max_frames;
                 maxSizeMb = max_size_mb;
-                frameWriter = new BinaryWriter(File.Open(fileName, FileMode.Create));
+                frameWriter = new BinaryWriter(File.Open(writeFileName, FileMode.Create));
                 if (toCompress)
                 {
-                    framePosList = new List<Int32>();
+                    writeFramePosList = new List<Int32>();
                 }
                 saveMode = true;
             }
@@ -467,10 +487,10 @@ namespace Video
             }
             if (frameWriter != null)
             {
-                if (framePosList != null && toCompress)
+                if (writeFramePosList != null && toCompress)
                 {  // need to save frame positions and postion of start of frame positions
                     //Int32 pos = (Int32)frameWriter.BaseStream.Position;
-                    foreach (Int32 fp in framePosList)
+                    foreach (Int32 fp in writeFramePosList)
                     {
                         frameWriter.Write(fp);
                     }
@@ -480,6 +500,8 @@ namespace Video
                 ((IDisposable)frameWriter).Dispose();
                 frameWriter = null;
             }
+            framePosList = writeFramePosList;
+            fileName = writeFileName;
         }
         public void stopPlay()
         {
@@ -492,7 +514,28 @@ namespace Video
             }
         }
 
-
-
+        public void copy(int start_frame, int end_frame)
+        {
+            startPlayback();  // source file name already set
+            char[] seperators = { '.' };
+            string[] fp = fileName.Split(seperators);
+            string copy_name = fp[0] + "S" + start_frame.ToString() + "E" + end_frame.ToString() + "." + fp[1];
+            startSave(copy_name);
+            byte[] buffer = new byte[frameSize];  // frame Length was set directly by the calling window code
+            int frame_start = 0;
+            for (int f = start_frame; f <= end_frame; f++)
+            {
+                readFrame(buffer, f, true);
+                int write_frame_length = framePosList[f] - frame_start;
+                frame_start = framePosList[f];
+                frameWriter.Write(buffer, 0, write_frame_length);
+                writePos += write_frame_length;
+                writeFramePosList.Add(writePos);
+                writeFrameCount++;
+                Console.WriteLine("Bytes wrote:" + write_frame_length + " @ " + writePos);
+            }
+            stopPlay();
+            stopSave();
+        }
     }
 }

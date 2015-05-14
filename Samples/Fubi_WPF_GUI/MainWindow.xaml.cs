@@ -653,6 +653,7 @@ namespace Fubi_WPF_GUI
                             format = PixelFormats.Gray8;
                         wb = new WriteableBitmap(m_width, m_height, 0, 0, format, BitmapPalettes.Gray256);
                         s_buffer = new byte[(int)m_numChannels * m_width * m_height];
+                        videoFile.frameSize = s_buffer.Length;
                         image1.Source = wb;
                         bufferChanged = true;
                     }
@@ -2106,14 +2107,17 @@ namespace Fubi_WPF_GUI
         {
             lock (LockFubiUpdate)
             {
+                int current = 0, start = 0, end = 0;
+                //#ifdef ADD_RP_2015
+                if (recordImageCheckBox.IsChecked == true)
+                {
+                    Fubi.getPlaybackMarkers(ref current, ref start, ref end);
+                    videoFile.copy(start, end);
+                    showWarnMsg("Video filename changed to:" + videoFile.fileName + " for trimmed file", "Warning");
+                }
+                //#endif
                 if (Fubi.trimPlaybackFileToMarkers())
                 {
-                    //#ifdef ADD_RP_2015
-                    if (recordImageCheckBox.IsChecked == true)
-                    {
-                    }
-                    //#endif
-                    int current = 0, start = 0, end = 0;
                     Fubi.getPlaybackMarkers(ref current, ref start, ref end);
                     playbackSlider.Maximum = playbackSlider.EndValue = end;
                     playbackSlider.Value = current;

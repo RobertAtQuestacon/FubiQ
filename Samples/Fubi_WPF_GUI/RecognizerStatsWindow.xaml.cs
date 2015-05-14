@@ -26,6 +26,8 @@ namespace Fubi_WPF_GUI
         {
             InitializeComponent();
 
+            this.FontSize = 24;
+
             m_updateThread = new Thread(update);
             m_running = true;
             m_updateThread.Start();

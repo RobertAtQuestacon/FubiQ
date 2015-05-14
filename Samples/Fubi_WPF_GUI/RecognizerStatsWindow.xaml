@@ -53,6 +53,6 @@
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
-        <Label Height="28" HorizontalAlignment="Center" Margin="0" Name="warnLabel" VerticalAlignment="Top" Content="No users/hands tracked yet!" IsEnabled="True" Visibility="Hidden" />
+        <Label Height="40" HorizontalAlignment="Center" Margin="0" Name="warnLabel" VerticalAlignment="Top" Content="No users/hands tracked yet!" IsEnabled="True" Visibility="Hidden" />
     </Grid>
 </Window>

@@ -13,7 +13,18 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <MediaElement Grid.Column="0" Name="maleSpiderVideo" LoadedBehavior="Manual" UnloadedBehavior="Stop" Stretch="UniformToFill" Margin="0,-100,0,-100"
-     MediaOpened="MediaElement_MediaOpened" MediaFailed="MediaElement_MediaFailed" MediaEnded="MediaElement_MediaEnded"/> 
+     MediaOpened="MediaElement_MediaOpened" MediaFailed="MediaElement_MediaFailed" MediaEnded="MediaElement_MediaEnded"/>
+            <StackPanel Grid.Column="1" Name="progressStackPanel">
+                <Label Name="progressLbl1" Content="Step1:Wave One Arm"/>
+                <Label Name="progressLbl2" Content="Step2:Wobble Bottom"/>
+                <Label Name="progressLbl3" Content="Step3:Wave Both Arms"/>
+                <Label Name="progressLbl4" Content="Step4:Touch Hands High"/>
+                <Label Name="progressLbl5" Content="Step5:Side Step" />
+                <Label Name="progressLbl6" Content="Step6:Raise arms and wobble" />
+                <Label Name="progressLbl7" Content="Step7:Side Step again" />
+                <Label Name="progressLbl8" Content="Success" />
+            </StackPanel>
+            <Rectangle Name="TimeOutBar" Grid.Column="1" Fill="Red" Opacity="0.4" HorizontalAlignment="Left" Margin="0,0,0,0" Width="100" />
         </Grid>
         <Grid Grid.Row="1" Background="black">
             <Grid.ColumnDefinitions>
@@ -21,6 +32,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
         <Image Name="image1" Stretch="Uniform" MinHeight="120" Margin="0" Grid.Column="0" StretchDirection="Both" MinWidth="160" Grid.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Label Name="statusLbl" Content="SUCCESS!" FontSize="48" FontStyle="Italic" FontWeight="ExtraBold"  Foreground="LightGreen" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" />
         <Image Name="image2" Stretch="Uniform" MinHeight="120" Margin="0" Grid.Column="1" StretchDirection="Both" MinWidth="160" Grid.ZIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>
         </Grid>

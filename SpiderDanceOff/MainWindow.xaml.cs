@@ -65,9 +65,20 @@ namespace SpiderDanceOff
         private delegate void TwoStringDelegate(string str1, string str2);
 
         private string mediaPath = @"E:\Documents\media\spiders";
+        private string[] gameStageGesture = { "LeftHandWavingAboveShoulder OR RightHandWavingAboveShoulder", "hipWobble", "ArmsUpDownUp", "HandsJoinUp", "sideStep", "armsUp AND hipWobble", "sideStep" };
+        private string spiderDancePath = "spiderDances";
+        private string[] gameStageVideos = { "spider_wave.vgz", "spider_hip_wobble.vgz", "spider_arms_up_down.vgz", "spider_hands_join_up.vgz", "spider_side_step.vgz", "spider_hip_wobble_arms_up.vgz", "spider_side_step.vgz", "success.vgz", "failure.vgz" };
+        //private bool isHipWobble = false;
 
         Window1 window1 = null;
-        
+        int gameStage = 0;
+        List<string> activeGestures = new List<string>();
+        bool gestureStep = false;
+        DateTime stageTime;
+        double stageTimeLimit = 10.0;
+        int testMode = 0;  // 1 = kills timeout
+        string statusMessage = "";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -83,29 +94,34 @@ namespace SpiderDanceOff
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-             Screen[] screens = Screen.AllScreens; // 'doesn't necessarily put them in the right order
-        foreach(Screen s in screens) {
-            if(SystemInformation.MonitorCount == 1 || s.WorkingArea.Left > 1000) {
-                Screen screen2 = s;
-                Console.WriteLine("Screen width:" + s.WorkingArea.Width.ToString() + " height:" + s.WorkingArea.Height.ToString());
-                window1 = new Window1();
-                window1.WindowStartupLocation = WindowStartupLocation.Manual;
-                window1.Left = screen2.WorkingArea.Left;
-                window1.Top = screen2.WorkingArea.Top;
-                window1.Show();
-                window1.WindowState = WindowState.Maximized; //do this after Show() or won't draw on secondary screens
+            Screen[] screens = Screen.AllScreens; // 'doesn't necessarily put them in the right order
+            foreach (Screen s in screens)
+            {
+                if (SystemInformation.MonitorCount == 1 || s.WorkingArea.Left > 1000)
+                {
+                    Screen screen2 = s;
+                    Console.WriteLine("Screen width:" + s.WorkingArea.Width.ToString() + " height:" + s.WorkingArea.Height.ToString());
+                    window1 = new Window1();
+                    window1.WindowStartupLocation = WindowStartupLocation.Manual;
+                    window1.Left = screen2.WorkingArea.Left;
+                    window1.Top = screen2.WorkingArea.Top;
+                    window1.Show();
+                    window1.WindowState = WindowState.Maximized; //do this after Show() or won't draw on secondary screens
+                }
             }
-        }
-        if(SystemInformation.MonitorCount == 1) {
-            this.WindowState = System.Windows.WindowState.Minimized;
-        } else {
-            maxWindow();
-        }
-        string fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4");
-        maleSpiderVideo.Source = new System.Uri(fid);
-        fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
-        window1.femaleSpiderVideo.Source = new System.Uri(fid);
- 
+            if (SystemInformation.MonitorCount == 1)
+            {
+                this.WindowState = System.Windows.WindowState.Minimized;
+            }
+            else
+            {
+                maxWindow();
+            }
+            string fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4");
+            maleSpiderVideo.Source = new System.Uri(fid);
+            fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
+            window1.femaleSpiderVideo.Source = new System.Uri(fid);
+
 
 
             videoFile.edgeDelta = 10;
@@ -115,6 +131,9 @@ namespace SpiderDanceOff
 
             maleSpiderVideo.Play();
             window1.femaleSpiderVideo.Play();
+
+            setProgress(0);
+
         }
 
 
@@ -161,9 +180,55 @@ namespace SpiderDanceOff
                         this.WindowStyle = WindowStyle.SingleBorderWindow;
                     }
                     break;
+                case Key.Space:
+                    setProgress(gameStage + 1);
+                    break;
+                case Key.Tab:
+                    testMode = 1 - testMode;
+                    break;
             }
         }
 
+        private void setProgress(int stage)
+        {
+            gameStage = stage;
+            stageTime = DateTime.Now;
+            System.Windows.Controls.Label[] stageLabels = { progressLbl1, progressLbl2, progressLbl3, progressLbl4, progressLbl5, progressLbl6, progressLbl7, progressLbl8 };
+            for (int i = 0; i < stageLabels.Length; i++)
+            {
+                if (i == stage)
+                {
+                    stageLabels[i].Foreground = Brushes.Yellow;
+                    stageLabels[i].Background = Brushes.Green;
+                }
+                else
+                {
+                    stageLabels[i].Foreground = Brushes.Brown;
+                    stageLabels[i].Background = Brushes.Gray;
+                }
+                stageLabels[i].FontSize = 32;
+            }
+            if (stage == 7)
+            {
+                statusLbl.Content = "SUCCESS! SHE LOVES MY DANCE.";
+                statusLbl.Visibility = Visibility.Visible;
+            }
+            else if (stage == 8)
+            {
+                statusLbl.Content = "FAILURE. RUN AWAY!";
+                statusLbl.Visibility = Visibility.Visible;
+            }
+            else
+                statusLbl.Visibility = Visibility.Hidden;
+
+            videoFile.stopPlay();
+            if (gameStage <= gameStageVideos.Length)
+            {
+                videoFile.fileName = System.IO.Path.Combine(spiderDancePath, gameStageVideos[gameStage]);
+                videoFile.startPlayback();
+            }
+            TimeOutBar.Width = 0;
+        }
 
         private void fubiMain(object filterOptions)
         {
@@ -209,7 +274,7 @@ namespace SpiderDanceOff
                 Fubi.setAutoStartCombinationRecognition(true);
 
                 // Load XML with sample mouse control gestures
-                if (Fubi.loadRecognizersFromXML("TutorialRecognizers.xml"))
+                if (Fubi.loadRecognizersFromXML("SpiderRecognizers.xml"))
                 {
                     //    // This requires to update the gesture list used for selecting key/button bindings and for xml generation
                     //    Dispatcher.BeginInvoke(new NoArgDelegate(refreshGestureList), null);
@@ -221,8 +286,8 @@ namespace SpiderDanceOff
             Fubi.RecognitionStart += new Fubi.RecognitionHandler(recognitionStart);
             Fubi.RecognitionEnd += new Fubi.RecognitionHandler(recognitionEnd);
             DispatcherOperation currentOp = null;
-            videoFile.fileName = "trainingData/tempRecord2.vid";
-            videoFile.startPlayback();
+            //videoFile.fileName = gameStageVideos[gameStage]; //"trainingData/tempRecord2.vid";
+            //videoFile.startPlayback();
 
             while (m_running)
             {
@@ -292,53 +357,179 @@ namespace SpiderDanceOff
                 windowBuffer2.WritePixels(new Int32Rect(0, 0, windowBuffer2.PixelWidth, windowBuffer2.PixelHeight), s_buffer2, stride2, 0);
             }
 
+            if (gestureStep)
+            {
+                gestureStep = false;
+                setProgress(gameStage + 1);
+            }
+            else if (gameStage > 0)
+            {
+                double stage_time = (DateTime.Now - stageTime).TotalSeconds;
+                if (stage_time > stageTimeLimit)
+                {
+                    if (testMode == 0)
+                    {
+                        if (gameStage > 6)
+                            setProgress(0);  // fail notice should appear if gamestage > 0 and user still present
+                        else
+                            setProgress(8);  // note that stage 7 is the success stage
+                    }
+                    else
+                    {
+                        TimeOutBar.Width = 0;
+                    }
+                }
+                else if (gameStage > 0)
+                {
+                    TimeOutBar.Width = stage_time / stageTimeLimit * progressStackPanel.ActualWidth;
+                }
+                else
+                    TimeOutBar.Width = 0;
+            }
+            if (statusMessage.Length > 0)  // used in test modes
+            {
+                statusLbl.Content = statusMessage;
+                statusLbl.Visibility = Visibility.Visible;
+                statusMessage = "";
+            }
+
         }
 
         private void recognitionStart(string gestureName, uint targetID, bool isHand, FubiUtils.RecognizerType recognizerType)
         {
-            Console.WriteLine(recognizerType.ToString() + "-->" + "User " + targetID + ": START OF " + gestureName + "\n");
-            //    switch (recognizerType)
-            //    {
-            //        case FubiUtils.RecognizerType.PREDEFINED_GESTURE:
-            //            {
-            //                Console.WriteLine("-->" + (isHand ? "Hand " : "User ") + targetID + ": END OF " + gestureName + "\n");
-            //            }
-            //            break;
-            //        case FubiUtils.RecognizerType.USERDEFINED_GESTURE:
-            //            {
-            //                Console.WriteLine("-->" + (isHand ? "Hand " : "User ") + targetID + ": END OF " + gestureName + "\n");
-            //                 }
-            //            break;
-            //        case FubiUtils.RecognizerType.USERDEFINED_COMBINATION:
-            //        case FubiUtils.RecognizerType.PREDEFINED_COMBINATION:
-            //            {
-            //                // Nothing to do here..
-            //            }
-            //            break;
-            //    }
+            switch (recognizerType)
+            {
+                //        case FubiUtils.RecognizerType.PREDEFINED_GESTURE:
+                //            {
+                //                Console.WriteLine("-->" + (isHand ? "Hand " : "User ") + targetID + ": END OF " + gestureName + "\n");
+                //            }
+                //            break;
+                //        case FubiUtils.RecognizerType.USERDEFINED_GESTURE:
+                //            {
+                //                Console.WriteLine("-->" + (isHand ? "Hand " : "User ") + targetID + ": END OF " + gestureName + "\n");
+                //                 }
+                //            break;
+                case FubiUtils.RecognizerType.USERDEFINED_COMBINATION:
+                    //        case FubiUtils.RecognizerType.PREDEFINED_COMBINATION:
+                    //            {
+                    //                // Nothing to do here..
+                    //            }
+                    Console.WriteLine(recognizerType.ToString() + "-->" + "User " + targetID + ": START OF " + gestureName + "\n");
+                    uint numStates;
+                    bool isInterrupted, isInTransition;
+                    int gestureState = Fubi.getCurrentCombinationRecognitionState(gestureName, targetID, out numStates, out isInterrupted, out isInTransition) + 1;
+                    Console.WriteLine("State:" + gestureState + " NumStates:" + numStates + " IsInterupted:" + isInterrupted + " IsInTransition:" + isInTransition);
+                    activeGestures.Add(gestureName);
+                    //if (true) // (gestureState == numStates)
+                    //{
+                    //    if (gestureName == gameStageGesture[gameStage])
+                    //    {
+                    //        if (gameStage != 5 || isHipWobble)
+                    //            setProgress(gameStage + 1);
+                    //    }
+                    //    else if (gestureName == "hipWobble")
+                    //        isHipWobble = true;
+                    //}
+                    char[] seperator = { ' ' };
+                    if (gameStage < gameStageGesture.Length)
+                    {
+                        string[] gest_script = gameStageGesture[gameStage].Split(seperator);
+                        bool[] state = new bool[10];  // assumption
+                        int[] op = new int[10];
+                        state[0] = false;
+                        op[0] = 0;
+                        int bl = 0;
+                        foreach (string gs in gest_script)
+                        {
+                            if (gs == "(")
+                            {
+                                bl++;
+                                op[bl] = 0;
+                            }
+                            else if (gs == ")")
+                            {
+                                if (bl > 0)
+                                {
+                                    switch (op[bl - 1])
+                                    {
+                                        case 0:
+                                            state[bl - 1] = state[bl];
+                                            break;
+                                        case 1:
+                                            state[bl - 1] = state[bl - 1] || state[bl];
+                                            break;
+                                        case 2:
+                                            state[bl - 1] = state[bl - 1] && state[bl];
+                                            break;
+                                    }
+                                    bl--;
+                                }
+                            }
+                            else if (gs == "OR")
+                                op[bl] = 1;
+                            else if (gs == "AND")
+                                op[bl] = 2;
+                            else
+                            {
+                                bool gstate = activeGestures.Contains(gs);
+                                if (gstate && (testMode == 1))
+                                {
+                                    statusMessage = gs;
+                                 }
+                                switch (op[bl])
+                                {
+                                    case 0:
+                                        state[bl] = gstate;
+                                        break;
+                                    case 1:
+                                        state[bl] = gstate || state[bl];
+                                        break;
+                                    case 2:
+                                        state[bl] = gstate && state[bl];
+                                        break;
+                                }
+
+                            }
+                        }
+                        if (state[0])  // all conditions have been achieived
+                            gestureStep = true;  // lets gui update know to advance to next stage
+                    }
+                    break;
+
+            }
         }
 
         private void recognitionEnd(string gestureName, uint targetID, bool isHand, FubiUtils.RecognizerType recognizerType)
         {
-
+            switch (recognizerType)
+            {
+                case FubiUtils.RecognizerType.USERDEFINED_COMBINATION:
+                    Console.WriteLine(recognizerType.ToString() + "-->" + "User " + targetID + ": END OF " + gestureName + "\n");
+                    activeGestures.Remove(gestureName);
+                    //if (gestureName == "hipWobble")
+                    //    isHipWobble = false;
+                    break;
+            }
         }
 
         private void MediaElement_MediaOpened(System.Object sender, EventArgs e)
         {
         }
 
-        
-    private void MediaElement_MediaFailed(System.Object sender, EventArgs e) {
-        Console.WriteLine("Media failed: " + e.ToString());
-        //DiagnosticLabel.Content = "Media failed: " & e.ToString
-        //'MsgBox("Media failed: " & e.ToString)
-        maleSpiderVideo.Stop();
-    }
 
-    private void MediaElement_MediaEnded(System.Object sender, EventArgs e) {
-        maleSpiderVideo.Stop();
-        maleSpiderVideo.Play();
-    }
+        private void MediaElement_MediaFailed(System.Object sender, EventArgs e)
+        {
+            Console.WriteLine("Media failed: " + e.ToString());
+            //DiagnosticLabel.Content = "Media failed: " & e.ToString
+            //'MsgBox("Media failed: " & e.ToString)
+            maleSpiderVideo.Stop();
+        }
 
-     }
+        private void MediaElement_MediaEnded(System.Object sender, EventArgs e)
+        {
+            maleSpiderVideo.Stop();
+            maleSpiderVideo.Play();
+        }
+
+    }
 }

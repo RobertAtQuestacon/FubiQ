@@ -92,3 +92,8 @@ The Aforge AVIWriter class looks promising (http://www.aforgenet.com/framework/d
 Also found a Kinect Capture program in http://www.aforgenet.com/framework/samples/video.html but the sources are in C:\Program Files\AForge.NET\Framework\Samples\Video\Kinect Capture
 
 The dlls for referencing can be found in C:\Program Files\AForge.NET\Framework\Release
+
+May 14, 2015
+Video recording as gz compressed frames working well in video class. Add trim to video.
+Gestures working except it seems you cannot have combined gestures of combined gestures.
+Also possibly two combined gestures cannot occur at the same time?
