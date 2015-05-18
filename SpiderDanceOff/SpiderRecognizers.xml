@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<FubiRecognizers xmlns="http://www.hcm-lab.de" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hcm-lab.de http://www.hcm-lab.de/downloads/FubiRecognizers.xsd">
+<!-- THIS IS A COPY FROM THE BIN DIRECTORY -->
+  <JointRelationRecognizer name="rightHandAboveShoulder">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <MinValues y="0"/>
+    </JointRelationRecognizer>
+  <LinearMovementRecognizer name="rightHandMovesRight" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <BasicDirection type="right"/>
+    <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="rightHandMovesLeft" visibility="hidden">
+    <Joints main="rightHand" relative="rightShoulder"/>
+    <Direction x="-1" y="0" z="0"/>
+    <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <CombinationRecognizer name="RightHandWavingAboveShoulder">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="rightHandAboveShoulder"/>
+      <Recognizer name="rightHandMovesLeft"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="rightHandAboveShoulder"/>
+      <Recognizer name="rightHandMovesRight"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="rightHandAboveShoulder"/>
+      <Recognizer name="rightHandMovesLeft"/>
+    </State>
+    <State minDuration="0.1">
+      <Recognizer name="rightHandAboveShoulder"/>
+      <Recognizer name="rightHandMovesRight"/>
+    </State>
+  </CombinationRecognizer>
+  <JointRelationRecognizer name="leftHandAboveShoulder" visibility="hidden">
+    <Joints main="leftHand" relative="leftShoulder"/>
+    <MinValues y="0"/>
+  </JointRelationRecognizer>
+  <LinearMovementRecognizer name="leftHandMovesRight" visibility="hidden">
+    <Joints main="leftHand" relative="leftShoulder"/>
+    <BasicDirection type="right"/>
+    <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="leftHandMovesLeft" visibility="hidden">
+    <Joints main="leftHand" relative="leftShoulder"/>
+    <Direction x="-1" y="0" z="0"/>
+    <Speed min="250"/>
+  </LinearMovementRecognizer>
+  <CombinationRecognizer name="LeftHandWavingAboveShoulder">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="leftHandMovesRight"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="leftHandMovesLeft"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="leftHandMovesRight"/>
+    </State>
+    <State minDuration="0.1">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="leftHandMovesLeft"/>
+    </State>
+  </CombinationRecognizer>
+  <!--<CombinationRecognizer name="OnArmWavingAboveShoulder">  cannot combine recognizers
+    <State minDuration="0.1">
+      <Recognizer name="LeftHandWavingAboveShoulder"/>
+      <AlternativeRecognizers>
+        <Recognizer name="RightHandWavingAboveShoulder"/>
+        </AlternativeRecognizers>
+    </State>
+  </CombinationRecognizer>-->
+  <JointRelationRecognizer name="rightHandBelowWaist" visibility="hidden">
+    <Joints main="rightHand" relative="torso"/>
+    <MaxValues y="0"/>
+  </JointRelationRecognizer>
+  <JointRelationRecognizer name="leftHandBelowWaist" visibility="hidden">
+    <Joints main="leftHand" relative="torso"/>
+    <MaxValues y="0"/>
+  </JointRelationRecognizer>
+  <!--Squat-->
+  <!--<LinearMovementRecognizer name="RightKneeBending">
+    <Joints main="rightKnee" relative="rightHip"/>
+    <Direction x="0" y="-1" z="0"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="LeftKneeBending">
+    <Joints main="leftKnee"  relative="leftHip" />
+    <Direction x="0" y="-1" z="0"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>-->
+  <!--<CombinationRecognizer name="SitDown">
+    <State minDuration="0.5">
+      <Recognizer name="RightKneeBending" minConfidence="0.75" ignoreOnTrackingError="true"/>
+      <Recognizer name="LeftKneeBending" minConfidence="0.75" ignoreOnTrackingError="true"/>
+    </State>
+  </CombinationRecognizer>-->
+  <!--<LinearMovementRecognizer name="hipDownMove">
+    <Joints main="leftHip" />
+    <Direction x="0" y="-1" z="0"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="hipUpMove">
+    <Joints main="leftHip" />
+    <Direction x="0" y="1" z="0"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>-->
+  <!--<CombinationRecognizer name="SquatDownUp">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandBelowWaist"/>
+      <Recognizer name="rightHandBelowWaist"/>
+      <Recognizer name="hipDownMove"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandBelowWaist"/>
+      <Recognizer name="rightHandBelowWaist"/>
+      <NotRecognizer name="hipUpMove"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandBelowWaist"/>
+      <Recognizer name="rightHandBelowWaist"/>
+      <Recognizer name="hipDownMove"/>
+    </State>
+    <State minDuration="0.1">
+      <Recognizer name="leftHandBelowWaist"/>
+      <Recognizer name="rightHandBelowWaist"/>
+      <NotRecognizer name="hipUpMove"/>
+    </State>
+  </CombinationRecognizer>-->
+  
+  <!--<CombinationRecognizer name="SquatDownUp">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="handsBelowWaist"/>
+      <Recognizer name="SitDown"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="handsBelowWaist"/>
+      <NotRecognizer name="SitDown"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="handsBelowWaist"/>
+      <Recognizer name="sitDown"/>
+    </State>
+    <State minDuration="0.1">
+      <Recognizer name="handsBelowWaist"/>
+      <NotRecognizer name="SitDown"/>
+    </State>
+  </CombinationRecognizer>-->
+  <LinearMovementRecognizer name="hipLeftMove" visibility="hidden">
+    <Joints main="leftHip" relative="leftShoulder"/>
+    <BasicDirection type="left"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="hipRightMove" visibility="hidden">
+    <Joints main="leftHip" relative="leftShoulder"/>
+    <BasicDirection type="right"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>
+  <CombinationRecognizer name="hipWobble">
+    <State minDuration="0.05" maxDuration="2" timeForTransition="0.3">
+      <Recognizer name="hipLeftMove"/>
+    </State>
+    <!--<State minDuration="0.05" maxDuration="2" timeForTransition="0.3">
+      <Recognizer name="hipRightMove"/>
+    </State>
+    <State minDuration="0.05" maxDuration="2" timeForTransition="0.3">
+      <Recognizer name="hipLeftMove"/>
+    </State>-->
+    <State minDuration="0.05">
+      <Recognizer name="hipRightMove"/>
+    </State>
+  </CombinationRecognizer>
+  <CombinationRecognizer name="ArmsUpDownUp">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="rightHandAboveShoulder"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <NotRecognizer name="leftHandAboveShoulder"/>
+      <NotRecognizer name="rightHandAboveShoulder"/>
+    </State>
+     <State minDuration="0.1">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="rightHandAboveShoulder"/>
+    </State>
+  </CombinationRecognizer>
+  <JointRelationRecognizer name="handJoin" visibility="hidden">
+    <Joints main="rightHand" relative="leftHand"/>
+    <MaxValues x="200"/>
+  </JointRelationRecognizer>
+  <CombinationRecognizer name="HandsJoinUp">
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="rightHandAboveShoulder"/>
+      <NotRecognizer name="handJoin"/>
+    </State>
+    <State minDuration="0.1" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="rightHandAboveShoulder"/>
+      <Recognizer name="handJoin"/>
+    </State>
+    <State minDuration="0.1">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="rightHandAboveShoulder"/>
+      <NotRecognizer name="handJoin"/>
+    </State>
+  </CombinationRecognizer>
+  <LinearMovementRecognizer name="leftMove" visibility="hidden">
+    <Joints main="leftHip"/>
+    <BasicDirection type="left"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>
+  <LinearMovementRecognizer name="rightMove" visibility="hidden">
+    <Joints main="leftHip"/>
+    <BasicDirection type="right"/>
+    <Speed min="50"/>
+  </LinearMovementRecognizer>
+  <CombinationRecognizer name="sideStep">
+    <State minDuration="0.4" maxDuration="2" timeForTransition="0.3">
+      <Recognizer name="leftMove"/>
+    </State>
+    <!--<State minDuration="0.4" maxDuration="1.2" timeForTransition="0.3">
+     <Recognizer name="rightMove"/>
+    </State>
+    <State minDuration="0.4" maxDuration="1.2" timeForTransition="0.3">
+      <Recognizer name="leftMove"/>
+    </State>-->
+    <State minDuration="0.4">
+      <Recognizer name="rightMove"/>
+    </State>
+  </CombinationRecognizer>
+  <CombinationRecognizer name="armsUp"> 
+    <State minDuration="0.4">
+      <Recognizer name="leftHandAboveShoulder"/>
+      <Recognizer name="rightHandAboveShoulder"/>
+    </State>
+  </CombinationRecognizer>
+</FubiRecognizers>
+    
+

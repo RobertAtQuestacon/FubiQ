@@ -255,8 +255,15 @@ namespace Video
                     }
                     else
                     {
-                        pix = blockFillColor;
-                        depth = bufin[i + 1] + bufin[i + 2] + bufin[i + 3];  // r + g +  b
+                        pix = 0xFF;
+                        if (bufin[i + 0] > 64)
+                            pix |= 0xFF000000;
+                        if (bufin[i + 1] > 64)
+                            pix |= 0x00FF0000;
+                        if (bufin[i + 2] > 64)
+                            pix |= 0x0000FF00;
+                        //pix = blockFillColor;
+                        depth = Math.Max(Math.Max(bufin[i + 0],bufin[i + 1]),bufin[i + 2]);  // max of b,g,r
                     }
                     int dd = Math.Abs(depth - last_depth);
                     if (dd > edgeDelta)
@@ -267,7 +274,9 @@ namespace Video
                         edgeDelay--;
                     }
                     last_depth = depth;
-                    memStream.Write(BitConverter.GetBytes(pix), 0, 4);
+                    byte[] pix_bytes = BitConverter.GetBytes(pix);
+                    Array.Reverse(pix_bytes,0,4);
+                    memStream.Write(pix_bytes, 0, 4);
                 }
                 return memStream.ToArray();
             }

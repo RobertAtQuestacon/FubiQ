@@ -58,6 +58,8 @@ namespace SpiderDanceOff
         int frameNr = 0;
         bool stopDepthVideo = false;
         bool stopFubi = false;
+        int numUsers = 0;
+        bool userVisible;
 
         // Threading
         public readonly object LockFubiUpdate = new object(); // identifies sections that only one thread may enter
@@ -68,10 +70,10 @@ namespace SpiderDanceOff
 
         private string mediaPath = @"E:\Documents\media\spiders";
         private string[] gameStageGesture = { "LeftHandWavingAboveShoulder OR RightHandWavingAboveShoulder", "hipWobble", "ArmsUpDownUp", "HandsJoinUp", "sideStep", "armsUp AND hipWobble", "sideStep" };
-        private string spiderDancePath = "spiderDances";
+        private string spiderDancePath = @"..\spiderDances";
         private string[] gameStageVideos = { "spider_wave.vgz", "spider_hip_wobble.vgz", "spider_arms_up_down.vgz", "spider_hands_join_up.vgz", "spider_side_step.vgz", "spider_hip_wobble_arms_up.vgz", "spider_side_step.vgz", "success.vgz", "failure.vgz" };
         //private bool isHipWobble = false;
-        private string[] maleSpiderVideos = { @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4", @"Peacock_spider__(Maratus_volans)__MaleWobble.mp4", @"Peacock_spider__(Maratus_volans)__MaleBothWave.mp4", @"Peacock_spider__(Maratus_volans)__MaleFanUp.mp4", @"Peacock_Spider__(Maratus_mungaich)__MaleSideStep.mp4", @"Peacock_spider__(Maratus_volans)__MaleWobbleUp.mp4", @"Peacock_Spider__(Maratus_mungaich)__MaleSideStep.mp4", @"Peacock_Spider__(Maratus_mungaich)__Success.mp4", @"Peacock_spider__(Maratus_volans)__failure.mp4" };
+        private string[] maleSpiderVideos = { @"Peacock_spider__(Maratus_volans)__MaleWave.mp4", @"Peacock_spider__(Maratus_volans)__MaleWobble.mp4", @"Peacock_spider__(Maratus_volans)__MaleBothWave.mp4", @"Peacock_spider__(Maratus_volans)__MaleFanUp.mp4", @"Peacock_Spider__(Maratus_mungaich)__MaleSideStep.mp4", @"Peacock_spider__(Maratus_volans)__MaleWobbleUp.mp4", @"Peacock_Spider__(Maratus_mungaich)__MaleSideStep.mp4", @"Peacock_Spider__(Maratus_mungaich)__Success.mp4", @"Peacock_spider__(Maratus_volans)__failure.mp4" };
         Window1 window1 = null;
         int gameStage = 0;
         List<string> activeGestures = new List<string>();
@@ -172,6 +174,8 @@ namespace SpiderDanceOff
 
         private void onKeyPress(Object sender, System.Windows.Input.KeyEventArgs e)
         {
+
+            userStatsLbl.Visibility = Visibility.Visible;
             switch (e.Key)
             {
                 case Key.Escape:
@@ -255,8 +259,17 @@ namespace SpiderDanceOff
             if (videoPlaying)
                 maleSpiderVideo.Stop();
             string fid = System.IO.Path.Combine(mediaPath, maleSpiderVideos[gameStage]);
-            maleSpiderVideo.Source = new System.Uri(fid);
-            videoPlaying = false;  // will wait for fubi thread cycle before starting
+            if (File.Exists(fid))
+            {
+                maleSpiderVideo.Source = new System.Uri(fid);
+                videoPlaying = false;  // will wait for fubi thread cycle before starting
+                videoStatsLbl.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                videoStatsLbl.Content = fid;
+                videoStatsLbl.Visibility = Visibility.Visible;
+            }
             System.Windows.Controls.Label[] stageLabels = { progressLbl1, progressLbl2, progressLbl3, progressLbl4, progressLbl5, progressLbl6, progressLbl7, progressLbl8 };
             for (int i = 0; i < stageLabels.Length; i++)
             {
@@ -289,7 +302,16 @@ namespace SpiderDanceOff
             if (gameStage <= gameStageVideos.Length)
             {
                 videoFile.fileName = System.IO.Path.Combine(spiderDancePath, gameStageVideos[gameStage]);
-                videoFile.startPlayback();
+                guideLbl.Content = videoFile.fileName;
+                if (File.Exists(videoFile.fileName))
+                {
+                    videoFile.startPlayback();
+                    guideLbl.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    guideLbl.Visibility = Visibility.Visible;
+                }
             }
             TimeOutBar.Width = 0;
         }
@@ -367,6 +389,18 @@ namespace SpiderDanceOff
 
                         Fubi.getImage(s_buffer2, FubiUtils.ImageType.Depth, m_numChannels, FubiUtils.ImageDepth.D8, m_renderOptions,
                                 (int)FubiUtils.JointsToRender.ALL_JOINTS, m_selectedDepthMod);
+
+                        numUsers = Fubi.getNumUsers();
+                        uint[] users = new uint[10];
+                        Fubi.getClosestUserIDs(users);
+                        userVisible = false;
+                        for (int i = 0; i < numUsers; i++)
+                        {
+                            if (Fubi.isUserInScene(users[i])){
+                                userVisible = true;
+                            break;
+                        }
+                        }
                     }
                 }
 
@@ -427,10 +461,15 @@ namespace SpiderDanceOff
                 windowBuffer2.WritePixels(new Int32Rect(0, 0, windowBuffer2.PixelWidth, windowBuffer2.PixelHeight), s_buffer2, stride2, 0);
             }
 
+            userStatsLbl.Content = numUsers.ToString();
             if (gestureStep)
             {
                 gestureStep = false;
                 setProgress(gameStage + 1);
+            }
+            else if (!userVisible && gameStage > 0)
+            {
+                setProgress(0);  // return to start
             }
             else if (gameStage > 0)
             {
@@ -456,6 +495,7 @@ namespace SpiderDanceOff
                 else
                     TimeOutBar.Width = 0;
             }
+
             if (statusMessage.Length > 0)  // used in test modes
             {
                 statusLbl.Content = statusMessage;
