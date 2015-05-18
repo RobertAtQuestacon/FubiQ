@@ -248,7 +248,7 @@ namespace Video
                 {
                     UInt32 pix = BitConverter.ToUInt32(bufin, i);
                     int depth;
-                    if (bufin[i+3] == 0)
+                    if (bufin[i+3] == 0)  //bgra?
                     {
                         pix = 0;
                         depth = 1000;

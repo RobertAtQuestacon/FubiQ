@@ -71,7 +71,7 @@ namespace SpiderDanceOff
         private string spiderDancePath = "spiderDances";
         private string[] gameStageVideos = { "spider_wave.vgz", "spider_hip_wobble.vgz", "spider_arms_up_down.vgz", "spider_hands_join_up.vgz", "spider_side_step.vgz", "spider_hip_wobble_arms_up.vgz", "spider_side_step.vgz", "success.vgz", "failure.vgz" };
         //private bool isHipWobble = false;
-
+        private string[] maleSpiderVideos = { @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4", @"Peacock_spider__(Maratus_volans)__MaleWobble.mp4", @"Peacock_spider__(Maratus_volans)__MaleBothWave.mp4", @"Peacock_spider__(Maratus_volans)__MaleFanUp.mp4", @"Peacock_Spider__(Maratus_mungaich)__MaleSideStep.mp4", @"Peacock_spider__(Maratus_volans)__MaleWobbleUp.mp4", @"Peacock_Spider__(Maratus_mungaich)__MaleSideStep.mp4", @"Peacock_Spider__(Maratus_mungaich)__Success.mp4", @"Peacock_spider__(Maratus_volans)__failure.mp4" };
         Window1 window1 = null;
         int gameStage = 0;
         List<string> activeGestures = new List<string>();
@@ -130,11 +130,9 @@ namespace SpiderDanceOff
             {
                 maxWindow();
             }
-            string fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4");
-            maleSpiderVideo.Source = new System.Uri(fid);
             if (secondWindow)
             {
-                fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
+                string fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
                 window1.femaleSpiderVideo.Source = new System.Uri(fid);
             }
             
@@ -254,6 +252,11 @@ namespace SpiderDanceOff
             activeGestures.Clear();
             gameStage = stage;
             stageTime = DateTime.Now;
+            if (videoPlaying)
+                maleSpiderVideo.Stop();
+            string fid = System.IO.Path.Combine(mediaPath, maleSpiderVideos[gameStage]);
+            maleSpiderVideo.Source = new System.Uri(fid);
+            videoPlaying = false;  // will wait for fubi thread cycle before starting
             System.Windows.Controls.Label[] stageLabels = { progressLbl1, progressLbl2, progressLbl3, progressLbl4, progressLbl5, progressLbl6, progressLbl7, progressLbl8 };
             for (int i = 0; i < stageLabels.Length; i++)
             {
