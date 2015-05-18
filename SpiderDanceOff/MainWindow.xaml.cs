@@ -56,6 +56,8 @@ namespace SpiderDanceOff
         private static byte[] s_buffer2;
         private VideoClass videoFile = new VideoClass();
         int frameNr = 0;
+        bool stopDepthVideo = false;
+        bool stopFubi = false;
 
         // Threading
         public readonly object LockFubiUpdate = new object(); // identifies sections that only one thread may enter
@@ -78,12 +80,20 @@ namespace SpiderDanceOff
         double stageTimeLimit = 10.0;
         int testMode = 0;  // 1 = kills timeout
         string statusMessage = "";
+        bool mvPlaying = false;
+        bool fvPlaying = false;
+        bool secondWindow = false;
+        bool videoPlaying = false;
+        bool filterActive = true;
+
 
         public MainWindow()
         {
             InitializeComponent();
             m_running = true;
             m_fubiThread = new Thread(fubiMain);
+
+            // testtest();
         }
 
         public void showWarnMsg(string message, string caption)
@@ -94,19 +104,22 @@ namespace SpiderDanceOff
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Screen[] screens = Screen.AllScreens; // 'doesn't necessarily put them in the right order
-            foreach (Screen s in screens)
+            if (secondWindow)
             {
-                if (SystemInformation.MonitorCount == 1 || s.WorkingArea.Left > 1000)
+                Screen[] screens = Screen.AllScreens; // 'doesn't necessarily put them in the right order
+                foreach (Screen s in screens)
                 {
-                    Screen screen2 = s;
-                    Console.WriteLine("Screen width:" + s.WorkingArea.Width.ToString() + " height:" + s.WorkingArea.Height.ToString());
-                    window1 = new Window1();
-                    window1.WindowStartupLocation = WindowStartupLocation.Manual;
-                    window1.Left = screen2.WorkingArea.Left;
-                    window1.Top = screen2.WorkingArea.Top;
-                    window1.Show();
-                    window1.WindowState = WindowState.Maximized; //do this after Show() or won't draw on secondary screens
+                    if (SystemInformation.MonitorCount == 1 || s.WorkingArea.Left > 1000)
+                    {
+                        Screen screen2 = s;
+                        Console.WriteLine("Screen width:" + s.WorkingArea.Width.ToString() + " height:" + s.WorkingArea.Height.ToString());
+                        window1 = new Window1();
+                        window1.WindowStartupLocation = WindowStartupLocation.Manual;
+                        window1.Left = screen2.WorkingArea.Left;
+                        window1.Top = screen2.WorkingArea.Top;
+                        window1.Show();
+                        window1.WindowState = WindowState.Maximized; //do this after Show() or won't draw on secondary screens
+                    }
                 }
             }
             if (SystemInformation.MonitorCount == 1)
@@ -119,19 +132,22 @@ namespace SpiderDanceOff
             }
             string fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)__MaleWave.mp4-.mp4");
             maleSpiderVideo.Source = new System.Uri(fid);
-            fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
-            window1.femaleSpiderVideo.Source = new System.Uri(fid);
-
-
-
+            if (secondWindow)
+            {
+                fid = System.IO.Path.Combine(mediaPath, @"Peacock_spider__(Maratus_volans)_female1.mp4");
+                window1.femaleSpiderVideo.Source = new System.Uri(fid);
+            }
+            
             videoFile.edgeDelta = 10;
             videoFile.edgeThickness = 3;
             // Only start the thread after the windows has loaded
             m_fubiThread.Start(new FubiUtils.FilterOptions(1.0f, 1.0f, 0.007f));  // using filter defaults
 
-            maleSpiderVideo.Play();
-            window1.femaleSpiderVideo.Play();
-
+            // new to wait until fubi thread has started before playing video (found using keyboard stop start controls)
+            //maleSpiderVideo.Play();
+            //window1.femaleSpiderVideo.Play();
+            mvPlaying = false;
+            fvPlaying = false;
             setProgress(0);
 
         }
@@ -140,6 +156,7 @@ namespace SpiderDanceOff
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             maleSpiderVideo.Stop();
+            //window1.femaleSpiderVideo.Stop();
             m_running = false;
 
             m_fubiThread.Join(2000);
@@ -180,17 +197,61 @@ namespace SpiderDanceOff
                         this.WindowStyle = WindowStyle.SingleBorderWindow;
                     }
                     break;
+                case Key.M:
+                    mvPlaying = !mvPlaying;
+                    if (mvPlaying)
+                        maleSpiderVideo.Play();
+                    else
+                        maleSpiderVideo.Stop();
+                    break;
+                case Key.V:
+                    if (secondWindow)
+                    {
+                        fvPlaying = !fvPlaying;
+                        if (fvPlaying)
+                            window1.femaleSpiderVideo.Play();
+                        else
+                            window1.femaleSpiderVideo.Stop();
+                    }
+                    break;
+                case Key.F:
+                    stopFubi = !stopFubi;
+                    Console.WriteLine("Fubi state:" + stopDepthVideo);
+                    break;
+                case Key.S:
+                    stopDepthVideo = !stopDepthVideo;
+                    Console.WriteLine("Depth video state:" + stopDepthVideo);
+                    break;
+                case Key.L:
+                    filterActive = !filterActive;
+                    Console.WriteLine("Filter state:" + filterActive);
+                    break;
+
                 case Key.Space:
                     setProgress(gameStage + 1);
                     break;
                 case Key.Tab:
                     testMode = 1 - testMode;
                     break;
+            //    case Key.P:
+            //        Console.WriteLine("Pos1:" + window1.femaleSpiderVideo.Position);
+            //        if (window1.femaleSpiderVideo.IsLoaded)
+            //        {
+            //            //window1.femaleSpiderVideo.Stop();
+            //            //window1.femaleSpiderVideo.Play();
+            //        }
+            //        Console.WriteLine("Pos2:" + window1.femaleSpiderVideo.Position);
+            //        Console.WriteLine("Duration:" + window1.femaleSpiderVideo.NaturalDuration);
+            //        int seconds = (int)(window1.femaleSpiderVideo.NaturalDuration.TimeSpan.TotalSeconds / 10.0);
+            //        window1.femaleSpiderVideo.Position += new TimeSpan(0, 0, seconds);
+            //        Console.WriteLine("Pos3:" + window1.femaleSpiderVideo.Position);
+            //        break;
             }
         }
 
         private void setProgress(int stage)
         {
+            activeGestures.Clear();
             gameStage = stage;
             stageTime = DateTime.Now;
             System.Windows.Controls.Label[] stageLabels = { progressLbl1, progressLbl2, progressLbl3, progressLbl4, progressLbl5, progressLbl6, progressLbl7, progressLbl8 };
@@ -232,6 +293,7 @@ namespace SpiderDanceOff
 
         private void fubiMain(object filterOptions)
         {
+
             m_renderOptions = 0;
             m_renderOptions |= (int)FubiUtils.RenderOptions.Shapes;
             //m_renderOptions |= (int)FubiUtils.RenderOptions.Skeletons;
@@ -294,11 +356,15 @@ namespace SpiderDanceOff
 
                 lock (LockFubiUpdate)
                 {
-                    // Now update the sensors
-                    Fubi.updateSensor();
+                    if (!stopFubi)
+                    {
 
-                    Fubi.getImage(s_buffer2, FubiUtils.ImageType.Depth, m_numChannels, FubiUtils.ImageDepth.D8, m_renderOptions,
-                            (int)FubiUtils.JointsToRender.ALL_JOINTS, m_selectedDepthMod);
+                        // Now update the sensors
+                        Fubi.updateSensor();
+
+                        Fubi.getImage(s_buffer2, FubiUtils.ImageType.Depth, m_numChannels, FubiUtils.ImageDepth.D8, m_renderOptions,
+                                (int)FubiUtils.JointsToRender.ALL_JOINTS, m_selectedDepthMod);
+                    }
                 }
 
                 // And trigger a GUI update event
@@ -338,7 +404,7 @@ namespace SpiderDanceOff
                 }
                 //try
                 //{
-                if (videoFile.playMode)  // && Fubi.isPlayingSkeletonData())
+                if (videoFile.playMode && !stopDepthVideo)  // && Fubi.isPlayingSkeletonData())
                 {
                     frameNr = videoFile.readFrame(s_buffer1, frameNr);
                     var stride1 = windowBuffer1.PixelWidth * (windowBuffer1.Format.BitsPerPixel / 8);
@@ -353,7 +419,8 @@ namespace SpiderDanceOff
                 var stride2 = windowBuffer2.PixelWidth * (windowBuffer2.Format.BitsPerPixel / 8);
                 //int c = BitConverter.ToInt32(s_buffer2, (stride2 * windowBuffer2.PixelHeight+ stride2)/2);  //sample center
                 //Console.WriteLine(c.ToString("x"));  // seems to be ARGB format as printed (ie byte reverse)
-                s_buffer2 = videoFile.edgeFilter(s_buffer2);
+                if(filterActive)
+                  s_buffer2 = videoFile.edgeFilter(s_buffer2);
                 windowBuffer2.WritePixels(new Int32Rect(0, 0, windowBuffer2.PixelWidth, windowBuffer2.PixelHeight), s_buffer2, stride2, 0);
             }
 
@@ -393,6 +460,19 @@ namespace SpiderDanceOff
                 statusMessage = "";
             }
 
+            if(!videoPlaying) {
+                videoPlaying = true;
+                mvPlaying = true;
+                maleSpiderVideo.Play();
+                if(secondWindow) {
+                    fvPlaying = true;
+                    window1.femaleSpiderVideo.Play();
+                }
+            }
+
+
+
+                
         }
 
         private void recognitionStart(string gestureName, uint targetID, bool isHand, FubiUtils.RecognizerType recognizerType)
@@ -430,73 +510,98 @@ namespace SpiderDanceOff
                     //    else if (gestureName == "hipWobble")
                     //        isHipWobble = true;
                     //}
-                    char[] seperator = { ' ' };
                     if (gameStage < gameStageGesture.Length)
-                    {
-                        string[] gest_script = gameStageGesture[gameStage].Split(seperator);
-                        bool[] state = new bool[10];  // assumption
-                        int[] op = new int[10];
-                        state[0] = false;
-                        op[0] = 0;
-                        int bl = 0;
-                        foreach (string gs in gest_script)
-                        {
-                            if (gs == "(")
-                            {
-                                bl++;
-                                op[bl] = 0;
-                            }
-                            else if (gs == ")")
-                            {
-                                if (bl > 0)
-                                {
-                                    switch (op[bl - 1])
-                                    {
-                                        case 0:
-                                            state[bl - 1] = state[bl];
-                                            break;
-                                        case 1:
-                                            state[bl - 1] = state[bl - 1] || state[bl];
-                                            break;
-                                        case 2:
-                                            state[bl - 1] = state[bl - 1] && state[bl];
-                                            break;
-                                    }
-                                    bl--;
-                                }
-                            }
-                            else if (gs == "OR")
-                                op[bl] = 1;
-                            else if (gs == "AND")
-                                op[bl] = 2;
-                            else
-                            {
-                                bool gstate = activeGestures.Contains(gs);
-                                if (gstate && (testMode == 1))
-                                {
-                                    statusMessage = gs;
-                                 }
-                                switch (op[bl])
-                                {
-                                    case 0:
-                                        state[bl] = gstate;
-                                        break;
-                                    case 1:
-                                        state[bl] = gstate || state[bl];
-                                        break;
-                                    case 2:
-                                        state[bl] = gstate && state[bl];
-                                        break;
-                                }
-
-                            }
-                        }
-                        if (state[0])  // all conditions have been achieived
-                            gestureStep = true;  // lets gui update know to advance to next stage
-                    }
+                        gestureStep = testExpression(gameStageGesture[gameStage], activeGestures);    // lets gui update know to advance to next stage
                     break;
-
             }
+        }
+
+        //private void testtest()
+        //{
+        //    string exp1 = "A AND B";
+        //    string exp2 = "A OR B";
+        //    List<string> states = new List<string>();
+        //    Console.WriteLine("States=" + states.ToString());
+        //    Console.WriteLine(exp1 + " = " + testExpression(exp1, states).ToString());
+        //    Console.WriteLine(exp2 + " = " + testExpression(exp2, states).ToString());
+        //    states.Add("A");
+        //    Console.WriteLine("States=" + states.ToString());
+        //    Console.WriteLine(exp1 + " = " + testExpression(exp1, states).ToString());
+        //    Console.WriteLine(exp2 + " = " + testExpression(exp2, states).ToString());
+        //    states.Add("B");
+        //    Console.WriteLine("States=" + states.ToString());
+        //    Console.WriteLine(exp1 + " = " + testExpression(exp1, states).ToString());
+        //    Console.WriteLine(exp2 + " = " + testExpression(exp2, states).ToString());
+        //    states.Remove("A");
+        //    Console.WriteLine("States=" + states.ToString());
+        //    Console.WriteLine(exp1 + " = " + testExpression(exp1, states).ToString());
+        //    Console.WriteLine(exp2 + " = " + testExpression(exp2, states).ToString());
+        //}
+
+        private bool testExpression(string expression, List<string> active_states)
+        {
+            // expression is a boolean math expression formed by AND, OR and () operators
+            // this is tested against the presence of arguments in a list of active_states
+            char[] seperator = { ' ' };
+            string[] gest_script = expression.Split(seperator);
+            bool[] state = new bool[10];  // assumption
+            int[] op = new int[10];
+            state[0] = false;
+            op[0] = 0;
+            int bl = 0;
+            foreach (string gs in gest_script)
+            {
+                if (gs == "(")
+                {
+                    bl++;
+                    op[bl] = 0;
+                }
+                else if (gs == ")")
+                {
+                    if (bl > 0)
+                    {
+                        switch (op[bl - 1])
+                        {
+                            case 0:
+                                state[bl - 1] = state[bl];
+                                break;
+                            case 1:
+                                state[bl - 1] = state[bl - 1] || state[bl];
+                                break;
+                            case 2:
+                                state[bl - 1] = state[bl - 1] && state[bl];
+                                break;
+                        }
+                        bl--;
+                    }
+                }
+                else if (gs == "OR")
+                    op[bl] = 1;
+                else if (gs == "AND")
+                    op[bl] = 2;
+                else
+                {
+                    bool gstate = active_states.Contains(gs);
+                    if (gstate && (testMode == 1))
+                    {
+                        statusMessage = gs;
+                    }
+                    switch (op[bl])
+                    {
+                        case 0:
+                            state[bl] = gstate;
+                            break;
+                        case 1:
+                            state[bl] = gstate || state[bl];
+                            break;
+                        case 2:
+                            state[bl] = gstate && state[bl];
+                            break;
+                    }
+
+                }
+            }
+            return state[0];  // if true all conditions have been achieived
         }
 
         private void recognitionEnd(string gestureName, uint targetID, bool isHand, FubiUtils.RecognizerType recognizerType)
@@ -505,7 +610,7 @@ namespace SpiderDanceOff
             {
                 case FubiUtils.RecognizerType.USERDEFINED_COMBINATION:
                     Console.WriteLine(recognizerType.ToString() + "-->" + "User " + targetID + ": END OF " + gestureName + "\n");
-                    activeGestures.Remove(gestureName);
+                    //activeGestures.Remove(gestureName);  - gestures are active until change of stage
                     //if (gestureName == "hipWobble")
                     //    isHipWobble = false;
                     break;
@@ -514,6 +619,7 @@ namespace SpiderDanceOff
 
         private void MediaElement_MediaOpened(System.Object sender, EventArgs e)
         {
+            Console.WriteLine("Opened:" + sender.ToString());
         }
 
 
